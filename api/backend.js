@@ -20,22 +20,49 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       status: "Vercel backend proxy is running.",
-      backendConfigured: true,
-      backendUrlPreview: backendUrl.slice(0, 60)
+      backendConfigured: true
+    });
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      ok: false,
+      error: "Method not allowed."
     });
   }
 
   try {
-    const response = await fetch(backendUrl, {
+    const bodyText = JSON.stringify(req.body || {});
+
+    let response = await fetch(backendUrl, {
       method: "POST",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
       },
-      body: JSON.stringify(req.body || {})
+      body: bodyText,
+      redirect: "manual"
     });
 
+    if (response.status === 301 || response.status === 302 || response.status === 303 || response.status === 307 || response.status === 308) {
+      const redirectUrl = response.headers.get("location");
+
+      if (!redirectUrl) {
+        return res.status(502).json({
+          ok: false,
+          error: "Apps Script redirected but no Location header was found."
+        });
+      }
+
+      response = await fetch(redirectUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: bodyText
+      });
+    }
+
     const text = await response.text();
-    const contentType = response.headers.get("content-type") || "";
 
     try {
       const data = JSON.parse(text);
@@ -45,7 +72,7 @@ export default async function handler(req, res) {
         ok: false,
         error: "Apps Script returned non-JSON response.",
         appsScriptStatus: response.status,
-        appsScriptContentType: contentType,
+        appsScriptContentType: response.headers.get("content-type"),
         rawPreview: text.slice(0, 1000)
       });
     }
