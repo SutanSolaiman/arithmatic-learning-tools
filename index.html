@@ -1,1 +1,1625 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Tools</title>
+
+  <style>
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --line: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --dark: #111827;
+      --dark-soft: #1f2937;
+      --danger: #b91c1c;
+      --success: #166534;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .sidebar {
+      width: 270px;
+      background: var(--dark);
+      color: #ffffff;
+      padding: 18px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      color: #cbd5e1;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-bottom: 18px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: block;
+      margin-bottom: 8px;
+      padding: 12px 12px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--dark-soft);
+      color: #ffffff;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .nav button.active {
+      background: var(--blue);
+    }
+
+    .main {
+      flex: 1;
+      padding: 24px;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin: 24px 0 10px 0;
+      font-size: 18px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    button.primary,
+    button.secondary,
+    button.danger {
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button.primary {
+      border: 0;
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    button.primary:hover {
+      background: var(--blue-dark);
+    }
+
+    button.secondary {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    button.danger {
+      border: 1px solid #fecaca;
+      background: #fff1f2;
+      color: var(--danger);
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .output,
+    pre {
+      margin-top: 16px;
+      padding: 14px;
+      background: #f9fafb;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      white-space: pre-wrap;
+      min-height: 120px;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow: auto;
+    }
+
+    .cards-preview {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .preview-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #ffffff;
+    }
+
+    .preview-title {
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .result-meta {
+      margin-top: 12px;
+      padding: 12px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-top: 12px;
+      background: #ffffff;
+    }
+
+    table.result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    table.result-table th,
+    table.result-table td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    table.result-table th {
+      background: #f3f4f6;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .empty-table {
+      padding: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .print-area {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .sidebar,
+      .panel,
+      .main > .panel {
+        display: none !important;
+      }
+
+      .app,
+      .main {
+        display: block;
+        padding: 0;
+        margin: 0;
+        max-width: none;
+        width: 100%;
+      }
+
+      .print-area {
+        display: block !important;
+      }
+
+      .print-page {
+        page-break-after: always;
+        width: 100%;
+      }
+
+      .print-page:last-child {
+        page-break-after: auto;
+      }
+
+      .print-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8mm;
+      }
+
+      .print-card {
+        border: 1px solid #111827;
+        border-radius: 8px;
+        padding: 8mm;
+        min-height: 130mm;
+        font-size: 12px;
+        background: #ffffff;
+        page-break-inside: avoid;
+      }
+
+      .print-hari {
+        font-size: 16px;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 9px;
+        text-transform: uppercase;
+      }
+
+      .print-field {
+        font-size: 12px;
+        margin-bottom: 7px;
+        min-height: 15px;
+      }
+
+      .print-questions {
+        margin: 11px 0 0 18px;
+        padding: 0;
+      }
+
+      .print-questions li {
+        margin-bottom: 8px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .app {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .row,
+      .row-3,
+      .cards-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .main {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Learning Tools</div>
+      <div class="brand-sub">
+        PDF grading, result tables, math cards, and story learning workflow.
+      </div>
+
+      <div class="nav">
+        <button id="btn-pdf" class="active" onclick="showPanel('pdf')">PDF Upload</button>
+        <button id="btn-results" onclick="showPanel('results')">Results</button>
+        <button id="btn-arith" onclick="showPanel('arith')">Math Generator</button>
+        <button id="btn-story" onclick="showPanel('story')">Story Workflow</button>
+        <button id="btn-config" onclick="showPanel('config')">Config Check</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="panel-pdf" class="panel active">
+        <h1>Upload PDF Penilaian</h1>
+        <div class="hint">
+          Upload a local PDF for OCR and grading. Results are written to Nilai_Harian and Summary, then can be viewed and downloaded from the Results tab.
+        </div>
+
+        <label for="pdfFile">PDF File</label>
+        <input id="pdfFile" type="file" accept="application/pdf,.pdf">
+
+        <label for="pdfInstruction">Optional instruction for AI extraction</label>
+        <textarea id="pdfInstruction" placeholder="Optional. Example: read handwriting carefully, preserve Hari labels, extract all answers exactly."></textarea>
+
+        <div class="actions">
+          <button id="pdfBtn" class="primary" onclick="processPdfUpload()">Process PDF</button>
+          <button class="secondary" onclick="clearOutput('pdfResult')">Clear</button>
+          <button class="secondary" onclick="showPanel('results'); loadResults();">View Results</button>
+        </div>
+
+        <div id="pdfResult" class="output">Ready.</div>
+      </section>
+
+      <section id="panel-results" class="panel">
+        <h1>Results</h1>
+        <div class="hint">
+          View the current grading result tables from Google Sheets and download them as an Excel-compatible .xls file.
+        </div>
+
+        <div class="actions">
+          <button id="resultsBtn" class="primary" onclick="loadResults()">Refresh Results</button>
+          <button class="secondary" onclick="downloadResultsXls()">Download XLS</button>
+          <button class="secondary" onclick="openSpreadsheetUrl()">Open Google Sheet</button>
+          <button id="clearResultsBtn" class="danger" onclick="clearResultSheetsUI()">Clear Results</button>
+        </div>
+
+        <div id="resultsMeta" class="result-meta">No results loaded yet.</div>
+
+        <h2>Summary</h2>
+        <div id="summaryTableWrap" class="table-wrap">
+          <div class="empty-table">Click Refresh Results.</div>
+        </div>
+
+        <h2>Detail Nilai Harian</h2>
+        <div id="detailTableWrap" class="table-wrap">
+          <div class="empty-table">Click Refresh Results.</div>
+        </div>
+      </section>
+
+      <section id="panel-arith" class="panel">
+        <h1>Math Generator</h1>
+        <div class="hint">
+          Generate arithmetic practice cards. Printed cards keep the original plain format: HARI, Tanggal, Nama, ID Karyawan.
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="arithTitle">Title</label>
+            <input id="arithTitle" value="Applied Quantitative Learning Program">
+          </div>
+          <div>
+            <label for="arithEmployeePrefix">Employee ID Prefix</label>
+            <input id="arithEmployeePrefix" value="EMP">
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="arithEmployees">Total Employees</label>
+            <input id="arithEmployees" type="number" value="10" min="1">
+          </div>
+          <div>
+            <label for="arithDays">Total Days</label>
+            <input id="arithDays" type="number" value="5" min="1">
+          </div>
+          <div>
+            <label for="arithDayNumbers">Manual Day Numbers</label>
+            <input id="arithDayNumbers" placeholder="Example: 1,2,3,4,5">
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="arithDifficulty">Difficulty</label>
+            <select id="arithDifficulty">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div>
+            <label for="arithDigits">Z Digits</label>
+            <input id="arithDigits" type="number" value="3" min="2" max="6">
+          </div>
+          <div>
+            <label for="arithMode">Operation Mode</label>
+            <select id="arithMode">
+              <option value="mix" selected>Mix</option>
+              <option value="mul">Multiplication</option>
+              <option value="div">Division</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="arithBtn" class="primary" onclick="generateArithmetic()">Generate Math Pack</button>
+          <button class="secondary" onclick="printLastPack('arith')">Print Cards</button>
+          <button class="secondary" onclick="downloadLastPack('arith')">Download JSON</button>
+          <button class="secondary" onclick="clearGenerator('arith')">Clear</button>
+        </div>
+
+        <div id="arithResult" class="output">Ready.</div>
+        <div id="arithPreview" class="cards-preview"></div>
+      </section>
+
+      <section id="panel-story" class="panel">
+        <h1>Story Learning Workflow</h1>
+        <div class="hint">
+          Follow the full learning cycle: benchmark first, generate adaptive learning material from benchmark scores, then final measurement and progress comparison.
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="storyTitle">Title</label>
+            <input id="storyTitle" value="Applied Quantitative Learning Program">
+          </div>
+          <div>
+            <label for="storyContext">Learning Context</label>
+            <input id="storyContext" value="PRINTING FACTORY">
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="storyEmployees">Total Employees</label>
+            <input id="storyEmployees" type="number" value="10" min="1">
+          </div>
+          <div>
+            <label for="storyDays">Total Days</label>
+            <input id="storyDays" type="number" value="5" min="1">
+          </div>
+          <div>
+            <label for="storyDayNumbers">Manual Day Numbers</label>
+            <input id="storyDayNumbers" placeholder="Example: 1,2,3,4,5">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="storyDifficulty">Difficulty</label>
+            <select id="storyDifficulty">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div>
+            <label for="storyEmployeePrefix">Employee ID Prefix</label>
+            <input id="storyEmployeePrefix" value="EMP">
+          </div>
+        </div>
+
+        <h2>1. Benchmark Assessment</h2>
+        <div class="hint">
+          Generate the first assessment to diagnose baseline ability. Print it, assess the learner, then enter the benchmark skill scores below.
+        </div>
+
+        <div class="actions">
+          <button id="storyBenchmarkBtn" class="primary" onclick="generateStoryBenchmark()">Generate Story Benchmark</button>
+          <button class="secondary" onclick="printStoryWorkflowPack('benchmark')">Print Benchmark</button>
+          <button class="secondary" onclick="downloadStoryWorkflowJson('benchmark')">Download Benchmark JSON</button>
+        </div>
+
+        <div id="storyBenchmarkResult" class="output">Benchmark not generated yet.</div>
+        <div id="storyBenchmarkPreview" class="cards-preview"></div>
+
+        <h2>Benchmark Skill Scores</h2>
+        <div class="hint">
+          Enter scores from 0 to 100. These scores guide the adaptive learning material.
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="storySkillReading">Reading comprehension</label>
+            <input id="storySkillReading" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storySkillData">Data identification</label>
+            <input id="storySkillData" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storySkillOperation">Operation selection</label>
+            <input id="storySkillOperation" type="number" value="0" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="storySkillMultiplication">Multiplication accuracy</label>
+            <input id="storySkillMultiplication" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storySkillDivision">Division accuracy</label>
+            <input id="storySkillDivision" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storySkillRounding">Rounding and capacity logic</label>
+            <input id="storySkillRounding" type="number" value="0" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="storySkillMultiStep">Multi-step reasoning</label>
+            <input id="storySkillMultiStep" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storyBenchmarkNotes">Benchmark Notes</label>
+            <input id="storyBenchmarkNotes" placeholder="Optional short notes">
+          </div>
+        </div>
+
+        <h2>2. Adaptive Learning Material</h2>
+        <div class="hint">
+          Generates learning modules, guided examples, and practice questions according to the benchmark weaknesses.
+        </div>
+
+        <div class="actions">
+          <button id="storyLearningBtn" class="primary" onclick="generateStoryLearningMaterialUI()">Generate Adaptive Learning Material</button>
+          <button class="secondary" onclick="downloadStoryWorkflowJson('learning')">Download Learning JSON</button>
+        </div>
+
+        <div id="storyLearningResult" class="output">Learning material not generated yet.</div>
+
+        <h2>3. Final Measurement</h2>
+        <div class="hint">
+          Generate a final measurement pack after the learner completes the adaptive learning material.
+        </div>
+
+        <div class="actions">
+          <button id="storyFinalBtn" class="primary" onclick="generateStoryFinalMeasurement()">Generate Final Measurement</button>
+          <button class="secondary" onclick="printStoryWorkflowPack('final')">Print Final Measurement</button>
+          <button class="secondary" onclick="downloadStoryWorkflowJson('final')">Download Final JSON</button>
+        </div>
+
+        <div id="storyFinalResult" class="output">Final measurement not generated yet.</div>
+        <div id="storyFinalPreview" class="cards-preview"></div>
+
+        <h2>Final Skill Scores</h2>
+        <div class="hint">
+          Enter final measurement scores from 0 to 100, then compare progress.
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="storyFinalReading">Reading comprehension</label>
+            <input id="storyFinalReading" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storyFinalData">Data identification</label>
+            <input id="storyFinalData" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storyFinalOperation">Operation selection</label>
+            <input id="storyFinalOperation" type="number" value="0" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="storyFinalMultiplication">Multiplication accuracy</label>
+            <input id="storyFinalMultiplication" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storyFinalDivision">Division accuracy</label>
+            <input id="storyFinalDivision" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storyFinalRounding">Rounding and capacity logic</label>
+            <input id="storyFinalRounding" type="number" value="0" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="storyFinalMultiStep">Multi-step reasoning</label>
+            <input id="storyFinalMultiStep" type="number" value="0" min="0" max="100">
+          </div>
+          <div>
+            <label for="storyFinalNotes">Final Notes</label>
+            <input id="storyFinalNotes" placeholder="Optional short notes">
+          </div>
+        </div>
+
+        <h2>4. Progress Comparison</h2>
+        <div class="actions">
+          <button id="storyProgressBtn" class="primary" onclick="compareStoryProgressUI()">Compare Progress</button>
+          <button class="secondary" onclick="downloadStoryWorkflowJson('progress')">Download Progress JSON</button>
+          <button class="secondary" onclick="clearStoryWorkflow()">Clear Story Workflow</button>
+        </div>
+
+        <div id="storyProgressResult" class="output">Progress not compared yet.</div>
+      </section>
+
+      <section id="panel-config" class="panel">
+        <h1>Config Check</h1>
+        <div class="hint">
+          Tests whether the backend can read the internal instruction and knowledge folders used by the tools.
+        </div>
+
+        <div class="actions">
+          <button id="configBtn" class="primary" onclick="checkConfig()">Check Backend Config</button>
+          <button class="secondary" onclick="clearOutput('configResult')">Clear</button>
+        </div>
+
+        <pre id="configResult">Ready.</pre>
+      </section>
+
+      <div id="printArea" class="print-area"></div>
+    </main>
+  </div>
+
+  <script>
+    let lastArithPack = null;
+    let lastStoryPack = null;
+    let lastResultsData = null;
+    let storyBenchmarkPack = null;
+    let storyLearningMaterial = null;
+    let storyFinalPack = null;
+    let storyProgressReport = null;
+
+    function showPanel(name) {
+      const panels = ["pdf", "results", "arith", "story", "config"];
+
+      panels.forEach(function(id) {
+        const panel = document.getElementById("panel-" + id);
+        const button = document.getElementById("btn-" + id);
+
+        if (panel) panel.classList.remove("active");
+        if (button) button.classList.remove("active");
+      });
+
+      const targetPanel = document.getElementById("panel-" + name);
+      const targetButton = document.getElementById("btn-" + name);
+
+      if (targetPanel) targetPanel.classList.add("active");
+      if (targetButton) targetButton.classList.add("active");
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value || "";
+    }
+
+    function setHtml(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = value || "";
+    }
+
+    function clearOutput(id) {
+      setText(id, "Ready.");
+    }
+
+    function setBusy(buttonId, isBusy) {
+      const btn = document.getElementById(buttonId);
+      if (btn) btn.disabled = isBusy;
+    }
+
+    function runServer(functionName, args) {
+      return new Promise(function(resolve, reject) {
+        let runner = google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject);
+
+        if (!runner || typeof runner[functionName] !== "function") {
+          reject(new Error("Server function not found: " + functionName));
+          return;
+        }
+
+        if (!args || !args.length) {
+          runner[functionName]();
+        } else {
+          runner[functionName].apply(runner, args);
+        }
+      });
+    }
+
+    function runServer(functionName, args) {
+  const payload = convertRunServerCallToAppsScriptPayload(functionName, args || []);
+
+  return fetch("/api/backend", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      if (!data || data.ok !== true) {
+        throw new Error(data && data.error ? data.error : "Backend error.");
+      }
+
+      return data.result;
+    });
+}
+
+    function readFileAsDataUrl(file) {
+      return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+          resolve(event.target.result);
+        };
+
+        reader.onerror = function() {
+          reject(new Error("Failed to read file."));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function loadResults(switchTab) {
+      if (switchTab !== false) showPanel("results");
+      setBusy("resultsBtn", true);
+      setText("resultsMeta", "Loading results...");
+
+      try {
+        const result = await runServer("getResultsData", []);
+        lastResultsData = result;
+        renderResults(result);
+      } catch (err) {
+        setText("resultsMeta", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("resultsBtn", false);
+      }
+    }
+
+    function convertRunServerCallToAppsScriptPayload(functionName, args) {
+  if (functionName === "processGradePdfUpload") {
+    return {
+      action: "processGradePdfUpload",
+      payload: {
+        base64Data: args[0],
+        fileName: args[1],
+        optionalInstruction: args[2] || ""
+      }
+    };
+  }
+
+  if (functionName === "generateArithmeticAssessmentPack") {
+    return {
+      action: "generateArithmeticAssessmentPack",
+      payload: args[0] || {}
+    };
+  }
+
+  if (functionName === "generateStoryAssessmentPack") {
+    return {
+      action: "generateStoryAssessmentPack",
+      payload: args[0] || {}
+    };
+  }
+
+  if (functionName === "checkBackendConfigPublic" || functionName === "checkBackendConfig_SYS_") {
+    return {
+      action: "checkBackendConfig",
+      payload: {}
+    };
+  }
+
+  if (functionName === "updateSummarySheet_SYS_") {
+    return {
+      action: "updateSummarySheet_SYS_",
+      payload: {}
+    };
+  }
+
+  if (functionName === "getResultsData") {
+    return {
+      action: "getResultsData",
+      payload: {}
+    };
+  }
+
+  if (functionName === "clearResultSheets") {
+    return {
+      action: "clearResultSheets",
+      payload: {}
+    };
+  }
+
+  if (functionName === "generateStoryBenchmarkPack") {
+    return {
+      action: "generateStoryBenchmarkPack",
+      payload: args[0] || {}
+    };
+  }
+
+  if (functionName === "generateStoryLearningMaterial") {
+    return {
+      action: "generateStoryLearningMaterial",
+      payload: {
+        config: args[0] || {},
+        benchmarkResult: args[1] || {}
+      }
+    };
+  }
+
+  if (functionName === "generateStoryFinalMeasurementPack") {
+    return {
+      action: "generateStoryFinalMeasurementPack",
+      payload: {
+        config: args[0] || {},
+        benchmarkResult: args[1] || {}
+      }
+    };
+  }
+
+  if (functionName === "evaluateStoryProgress") {
+    return {
+      action: "evaluateStoryProgress",
+      payload: {
+        benchmarkResult: args[0] || {},
+        finalResult: args[1] || {}
+      }
+    };
+  }
+
+  throw new Error("Unsupported frontend function: " + functionName);
+}
+
+
+    function renderResults(data) {
+      if (!data || !data.ok) {
+        setText("resultsMeta", "No result data returned.");
+        return;
+      }
+
+      const detailCount = data.detail && data.detail.rows ? data.detail.rows.length : 0;
+      const summaryCount = data.summary && data.summary.rows ? data.summary.rows.length : 0;
+
+      setHtml("resultsMeta", [
+        "<strong>Spreadsheet:</strong> " + escapeHtml(data.spreadsheetName || "") + "<br>",
+        "<strong>Updated:</strong> " + escapeHtml(data.generatedAt || "") + "<br>",
+        "<strong>Summary rows:</strong> " + summaryCount + "<br>",
+        "<strong>Detail rows:</strong> " + detailCount
+      ].join(""));
+
+      renderTable("summaryTableWrap", data.summary);
+      renderTable("detailTableWrap", data.detail);
+    }
+
+    function renderTable(containerId, tableObj) {
+      const wrap = document.getElementById(containerId);
+      const headers = tableObj && tableObj.headers ? tableObj.headers : [];
+      const rows = tableObj && tableObj.rows ? tableObj.rows : [];
+
+      if (!wrap) return;
+
+      if (!headers.length) {
+        wrap.innerHTML = "<div class='empty-table'>No table headers found.</div>";
+        return;
+      }
+
+      if (!rows.length) {
+        wrap.innerHTML = "<div class='empty-table'>No rows found.</div>";
+        return;
+      }
+
+      const headHtml = headers.map(function(h) {
+        return "<th>" + escapeHtml(h) + "</th>";
+      }).join("");
+
+      const bodyHtml = rows.map(function(row) {
+        return "<tr>" + headers.map(function(_, index) {
+          return "<td>" + escapeHtml(row[index] || "") + "</td>";
+        }).join("") + "</tr>";
+      }).join("");
+
+      wrap.innerHTML = "<table class='result-table'><thead><tr>" + headHtml + "</tr></thead><tbody>" + bodyHtml + "</tbody></table>";
+    }
+
+    function downloadResultsXls() {
+      if (!lastResultsData) {
+        alert("Refresh results first.");
+        return;
+      }
+
+      const html = buildXlsWorkbookHtml(lastResultsData);
+      const blob = new Blob([html], {
+        type: "application/vnd.ms-excel;charset=utf-8"
+      });
+
+      const fileName = "learning_results_" + dateStampForFile() + ".xls";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function buildXlsWorkbookHtml(data) {
+      return [
+        "<html>",
+        "<head>",
+        "<meta charset='UTF-8'>",
+        "<style>",
+        "table { border-collapse: collapse; }",
+        "th, td { border: 1px solid #999; padding: 6px; mso-number-format:'\\@'; }",
+        "th { font-weight: bold; background: #e5e7eb; }",
+        "h2 { font-family: Arial, sans-serif; }",
+        "</style>",
+        "</head>",
+        "<body>",
+        "<h2>Summary</h2>",
+        tableObjectToXlsTable(data.summary || {}, "Summary"),
+        "<br><br>",
+        "<h2>Nilai_Harian</h2>",
+        tableObjectToXlsTable(data.detail || {}, "Nilai_Harian"),
+        "</body>",
+        "</html>"
+      ].join("");
+    }
+
+    function tableObjectToXlsTable(tableObj, fallbackName) {
+      const headers = tableObj.headers || [];
+      const rows = tableObj.rows || [];
+
+      if (!headers.length) {
+        return "<p>No data for " + escapeHtml(fallbackName) + "</p>";
+      }
+
+      const head = headers.map(function(h) {
+        return "<th>" + escapeHtml(h) + "</th>";
+      }).join("");
+
+      const body = rows.map(function(row) {
+        return "<tr>" + headers.map(function(_, index) {
+          return "<td>" + escapeHtml(row[index] || "") + "</td>";
+        }).join("") + "</tr>";
+      }).join("");
+
+      return "<table><thead><tr>" + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+    }
+
+    function openSpreadsheetUrl() {
+      if (!lastResultsData || !lastResultsData.spreadsheetUrl) {
+        alert("Refresh results first.");
+        return;
+      }
+
+      window.open(lastResultsData.spreadsheetUrl, "_blank");
+    }
+
+    async function clearResultSheetsUI() {
+      const confirmed = confirm("Clear Nilai_Harian and Summary? This cannot be undone from this app.");
+      if (!confirmed) return;
+
+      setBusy("clearResultsBtn", true);
+      setText("resultsMeta", "Clearing results...");
+
+      try {
+        const result = await runServer("clearResultSheets", []);
+        lastResultsData = null;
+        setText("resultsMeta", result && result.message ? result.message : "Results cleared.");
+        document.getElementById("summaryTableWrap").innerHTML = "<div class='empty-table'>No rows found.</div>";
+        document.getElementById("detailTableWrap").innerHTML = "<div class='empty-table'>No rows found.</div>";
+      } catch (err) {
+        setText("resultsMeta", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("clearResultsBtn", false);
+      }
+    }
+
+    async function generateArithmetic() {
+      setBusy("arithBtn", true);
+      setText("arithResult", "Generating...");
+      document.getElementById("arithPreview").innerHTML = "";
+      document.getElementById("printArea").innerHTML = "";
+
+      const config = {
+        title: valueOf("arithTitle"),
+        employeeIdPrefix: valueOf("arithEmployeePrefix"),
+        totalEmployees: numberOf("arithEmployees", 10),
+        totalDays: numberOf("arithDays", 5),
+        dayNumbers: valueOf("arithDayNumbers"),
+        difficulty: numberOf("arithDifficulty", 3),
+        zDigits: numberOf("arithDigits", 3),
+        operationMode: valueOf("arithMode")
+      };
+
+      try {
+        const result = await runServer("generateArithmeticAssessmentPack", [config]);
+        lastArithPack = result;
+        setText("arithResult", summarizePack(result));
+        renderPackPreview("arithPreview", result, "arith");
+      } catch (err) {
+        setText("arithResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("arithBtn", false);
+      }
+    }
+
+    function getStoryWorkflowConfig() {
+      return {
+        title: valueOf("storyTitle"),
+        learningContext: valueOf("storyContext"),
+        employeeIdPrefix: valueOf("storyEmployeePrefix"),
+        totalEmployees: numberOf("storyEmployees", 10),
+        totalDays: numberOf("storyDays", 5),
+        dayNumbers: valueOf("storyDayNumbers"),
+        difficulty: numberOf("storyDifficulty", 3)
+      };
+    }
+
+    function getStoryBenchmarkSkillResult() {
+      const values = [
+        numberOf("storySkillReading", 0),
+        numberOf("storySkillData", 0),
+        numberOf("storySkillOperation", 0),
+        numberOf("storySkillMultiplication", 0),
+        numberOf("storySkillDivision", 0),
+        numberOf("storySkillRounding", 0),
+        numberOf("storySkillMultiStep", 0)
+      ];
+
+      return {
+        overallScore: averageNumbers(values),
+        notes: valueOf("storyBenchmarkNotes"),
+        skills: {
+          reading_comprehension: values[0],
+          data_identification: values[1],
+          operation_selection: values[2],
+          multiplication_accuracy: values[3],
+          division_accuracy: values[4],
+          rounding_capacity_logic: values[5],
+          multi_step_reasoning: values[6]
+        }
+      };
+    }
+
+    function getStoryFinalSkillResult() {
+      const values = [
+        numberOf("storyFinalReading", 0),
+        numberOf("storyFinalData", 0),
+        numberOf("storyFinalOperation", 0),
+        numberOf("storyFinalMultiplication", 0),
+        numberOf("storyFinalDivision", 0),
+        numberOf("storyFinalRounding", 0),
+        numberOf("storyFinalMultiStep", 0)
+      ];
+
+      return {
+        overallScore: averageNumbers(values),
+        notes: valueOf("storyFinalNotes"),
+        skills: {
+          reading_comprehension: values[0],
+          data_identification: values[1],
+          operation_selection: values[2],
+          multiplication_accuracy: values[3],
+          division_accuracy: values[4],
+          rounding_capacity_logic: values[5],
+          multi_step_reasoning: values[6]
+        }
+      };
+    }
+
+    async function generateStoryBenchmark() {
+      setBusy("storyBenchmarkBtn", true);
+      setText("storyBenchmarkResult", "Generating benchmark...");
+      document.getElementById("storyBenchmarkPreview").innerHTML = "";
+
+      try {
+        const pack = await runServer("generateStoryBenchmarkPack", [getStoryWorkflowConfig()]);
+        storyBenchmarkPack = pack;
+        lastStoryPack = pack;
+        setText("storyBenchmarkResult", summarizeStoryWorkflowPack(pack));
+        renderPackPreview("storyBenchmarkPreview", pack, "story");
+      } catch (err) {
+        setText("storyBenchmarkResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("storyBenchmarkBtn", false);
+      }
+    }
+
+    async function generateStoryLearningMaterialUI() {
+      setBusy("storyLearningBtn", true);
+      setText("storyLearningResult", "Generating adaptive learning material...");
+
+      try {
+        const material = await runServer("generateStoryLearningMaterial", [
+          getStoryWorkflowConfig(),
+          getStoryBenchmarkSkillResult()
+        ]);
+
+        storyLearningMaterial = material;
+        setHtml("storyLearningResult", renderStoryLearningMaterialHtml(material));
+      } catch (err) {
+        setText("storyLearningResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("storyLearningBtn", false);
+      }
+    }
+
+    async function generateStoryFinalMeasurement() {
+      setBusy("storyFinalBtn", true);
+      setText("storyFinalResult", "Generating final measurement...");
+      document.getElementById("storyFinalPreview").innerHTML = "";
+
+      try {
+        const pack = await runServer("generateStoryFinalMeasurementPack", [
+          getStoryWorkflowConfig(),
+          getStoryBenchmarkSkillResult()
+        ]);
+
+        storyFinalPack = pack;
+        lastStoryPack = pack;
+        setText("storyFinalResult", summarizeStoryWorkflowPack(pack));
+        renderPackPreview("storyFinalPreview", pack, "story");
+      } catch (err) {
+        setText("storyFinalResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("storyFinalBtn", false);
+      }
+    }
+
+    async function compareStoryProgressUI() {
+      setBusy("storyProgressBtn", true);
+      setText("storyProgressResult", "Comparing progress...");
+
+      try {
+        const report = await runServer("evaluateStoryProgress", [
+          getStoryBenchmarkSkillResult(),
+          getStoryFinalSkillResult()
+        ]);
+
+        storyProgressReport = report;
+        setHtml("storyProgressResult", renderStoryProgressHtml(report));
+      } catch (err) {
+        setText("storyProgressResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("storyProgressBtn", false);
+      }
+    }
+
+    async function checkConfig() {
+      setBusy("configBtn", true);
+      setText("configResult", "Checking...");
+
+      try {
+        const result = await runServer("checkBackendConfigPublic", []);
+        setText("configResult", JSON.stringify(result, null, 2));
+      } catch (err) {
+        setText("configResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("configBtn", false);
+      }
+    }
+
+    function summarizePack(pack) {
+      if (!pack || !pack.meta) return "No result returned.";
+
+      const meta = pack.meta;
+      return [
+        "Generated successfully.",
+        "",
+        "Total employees: " + (meta.totalEmployees || 0),
+        "Total days: " + (meta.totalDays || 0),
+        "Total cards: " + ((pack.cards || []).length),
+        "Difficulty: " + (meta.difficulty || ""),
+        "Generated at: " + (meta.generatedAt || ""),
+        "",
+        "Print format:",
+        "HARI x",
+        "Tanggal:",
+        "Nama:",
+        "ID Karyawan:",
+        "Questions only. No title printed on cards."
+      ].join("\n");
+    }
+
+    function summarizeStoryWorkflowPack(pack) {
+      if (!pack || !pack.meta) return "No result returned.";
+
+      return [
+        "Generated successfully.",
+        "",
+        "Phase: " + (pack.meta.workflowPhase || "story"),
+        "Purpose: " + (pack.meta.purpose || ""),
+        "Total employees: " + (pack.meta.totalEmployees || 0),
+        "Total days: " + (pack.meta.totalDays || 0),
+        "Total cards: " + ((pack.cards || []).length),
+        "Generated at: " + (pack.meta.generatedAt || ""),
+        "",
+        "Print format:",
+        "HARI x",
+        "Tanggal:",
+        "Nama:",
+        "ID Karyawan:",
+        "Questions only. No title printed on cards."
+      ].join("\n");
+    }
+
+    function renderPackPreview(containerId, pack, type) {
+      const container = document.getElementById(containerId);
+      const cards = (pack && pack.cards) ? pack.cards.slice(0, 4) : [];
+
+      if (!container) return;
+
+      if (!cards.length) {
+        container.innerHTML = "";
+        return;
+      }
+
+      container.innerHTML = cards.map(function(card) {
+        const items = getCardItems(card, type).slice(0, 5).map(function(item) {
+          return "<li>" + escapeHtml(item) + "</li>";
+        }).join("");
+
+        return [
+          "<div class='preview-card'>",
+          "<div class='preview-title'>" + escapeHtml(formatHariLabel(card)) + " | " + escapeHtml(card.employeeId || "") + "</div>",
+          "<div class='small'>Tanggal:</div>",
+          "<div class='small'>Nama:</div>",
+          "<div class='small'>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>",
+          "<ol>" + items + "</ol>",
+          "<div class='small'>Preview only. Printed cards use the plain original format.</div>",
+          "</div>"
+        ].join("");
+      }).join("");
+    }
+
+    function renderStoryLearningMaterialHtml(material) {
+      if (!material || !material.modules || !material.modules.length) {
+        return "No learning material returned.";
+      }
+
+      return material.modules.map(function(module, index) {
+        const steps = module.guidedExample && module.guidedExample.steps
+          ? module.guidedExample.steps.map(function(step) { return "<li>" + escapeHtml(step) + "</li>"; }).join("")
+          : "";
+
+        const practice = module.practice
+          ? module.practice.map(function(item) {
+              return [
+                "<li>",
+                "<strong>Question:</strong> " + escapeHtml(item.question || "") + "<br>",
+                "<strong>Answer:</strong> " + escapeHtml(item.answer || "") + "<br>",
+                "<strong>Explanation:</strong> " + escapeHtml(item.explanation || ""),
+                "</li>"
+              ].join("");
+            }).join("")
+          : "";
+
+        return [
+          "<div class='preview-card'>",
+          "<div class='preview-title'>Module " + (index + 1) + ": " + escapeHtml(module.title || module.skill || "") + "</div>",
+          "<p><strong>Diagnosis:</strong> " + escapeHtml(module.diagnosis || "") + "</p>",
+          "<p><strong>Concept:</strong> " + escapeHtml(module.concept || "") + "</p>",
+          "<p><strong>Guided Example:</strong> " + escapeHtml(module.guidedExample && module.guidedExample.problem ? module.guidedExample.problem : "") + "</p>",
+          "<ol>" + steps + "</ol>",
+          "<p><strong>Answer:</strong> " + escapeHtml(module.guidedExample && module.guidedExample.answer ? module.guidedExample.answer : "") + "</p>",
+          "<p><strong>Practice:</strong></p>",
+          "<ol>" + practice + "</ol>",
+          "</div>"
+        ].join("");
+      }).join("<br>");
+    }
+
+    function renderStoryProgressHtml(report) {
+      if (!report || !report.rows) return "No progress report returned.";
+
+      const rows = report.rows.map(function(row) {
+        return [
+          "<tr>",
+          "<td>" + escapeHtml(row.skill) + "</td>",
+          "<td>" + escapeHtml(row.benchmark) + "%</td>",
+          "<td>" + escapeHtml(row.final) + "%</td>",
+          "<td>" + escapeHtml(row.improvement) + "</td>",
+          "<td>" + escapeHtml(row.status) + "</td>",
+          "</tr>"
+        ].join("");
+      }).join("");
+
+      return [
+        "<div class='result-meta'>",
+        "<strong>Benchmark average:</strong> " + escapeHtml(report.benchmarkAverage) + "%<br>",
+        "<strong>Final average:</strong> " + escapeHtml(report.finalAverage) + "%<br>",
+        "<strong>Overall improvement:</strong> " + escapeHtml(report.overallImprovement) + "<br>",
+        "<strong>Recommendation:</strong> " + escapeHtml(report.recommendation || ""),
+        "</div>",
+        "<div class='table-wrap'>",
+        "<table class='result-table'>",
+        "<thead><tr><th>Skill</th><th>Benchmark</th><th>Final</th><th>Improvement</th><th>Status</th></tr></thead>",
+        "<tbody>" + rows + "</tbody>",
+        "</table>",
+        "</div>"
+      ].join("");
+    }
+
+    function getCardItems(card, type) {
+      if (!card || !card.items) return [];
+
+      return card.items.map(function(item) {
+        return type === "story" ? String(item.question || "") : String(item.text || "");
+      });
+    }
+
+    function buildPrintArea(pack, type) {
+      const printArea = document.getElementById("printArea");
+      const cards = pack && pack.cards ? pack.cards : [];
+      const pages = [];
+
+      for (let i = 0; i < cards.length; i += 4) {
+        const pageCards = cards.slice(i, i + 4);
+
+        const cardHtml = pageCards.map(function(card) {
+          const items = getCardItems(card, type).map(function(item) {
+            return "<li>" + escapeHtml(item) + "</li>";
+          }).join("");
+
+          return [
+            "<div class='print-card'>",
+            "<div class='print-hari'>" + escapeHtml(formatHariLabel(card)) + "</div>",
+            "<div class='print-field'>Tanggal: </div>",
+            "<div class='print-field'>Nama: </div>",
+            "<div class='print-field'>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>",
+            "<ol class='print-questions'>" + items + "</ol>",
+            "</div>"
+          ].join("");
+        }).join("");
+
+        pages.push("<div class='print-page'><div class='print-grid'>" + cardHtml + "</div></div>");
+      }
+
+      if (printArea) printArea.innerHTML = pages.join("");
+    }
+
+    function formatHariLabel(card) {
+      const n = card && card.dayNumber ? Number(card.dayNumber) : "";
+      if (n) return "HARI " + n;
+
+      const label = String(card && card.dayLabel ? card.dayLabel : "").trim();
+      if (!label) return "HARI";
+
+      const match = label.match(/\d+/);
+      return match ? "HARI " + Number(match[0]) : label.toUpperCase();
+    }
+
+    function printLastPack(type) {
+      const pack = type === "story" ? lastStoryPack : lastArithPack;
+
+      if (!pack || !pack.cards || !pack.cards.length) {
+        alert("Generate a pack first.");
+        return;
+      }
+
+      buildPrintArea(pack, type);
+      window.print();
+    }
+
+    function printStoryWorkflowPack(which) {
+      const pack = which === "final" ? storyFinalPack : storyBenchmarkPack;
+
+      if (!pack || !pack.cards || !pack.cards.length) {
+        alert("Generate the pack first.");
+        return;
+      }
+
+      buildPrintArea(pack, "story");
+      window.print();
+    }
+
+    function downloadLastPack(type) {
+      const pack = type === "story" ? lastStoryPack : lastArithPack;
+
+      if (!pack) {
+        alert("Generate a pack first.");
+        return;
+      }
+
+      downloadJsonObject(pack, type + "_assessment_pack.json");
+    }
+
+    function downloadStoryWorkflowJson(which) {
+      let data = null;
+      let fileName = "story_workflow.json";
+
+      if (which === "benchmark") {
+        data = storyBenchmarkPack;
+        fileName = "story_benchmark_pack.json";
+      } else if (which === "learning") {
+        data = storyLearningMaterial;
+        fileName = "story_learning_material.json";
+      } else if (which === "final") {
+        data = storyFinalPack;
+        fileName = "story_final_measurement_pack.json";
+      } else if (which === "progress") {
+        data = storyProgressReport;
+        fileName = "story_progress_report.json";
+      }
+
+      if (!data) {
+        alert("Nothing to download yet.");
+        return;
+      }
+
+      downloadJsonObject(data, fileName);
+    }
+
+    function downloadJsonObject(data, fileName) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json;charset=utf-8"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearGenerator(type) {
+      if (type === "arith") {
+        lastArithPack = null;
+        setText("arithResult", "Ready.");
+        const preview = document.getElementById("arithPreview");
+        if (preview) preview.innerHTML = "";
+      }
+
+      document.getElementById("printArea").innerHTML = "";
+    }
+
+    function clearStoryWorkflow() {
+      storyBenchmarkPack = null;
+      storyLearningMaterial = null;
+      storyFinalPack = null;
+      storyProgressReport = null;
+      lastStoryPack = null;
+
+      setText("storyBenchmarkResult", "Benchmark not generated yet.");
+      setText("storyLearningResult", "Learning material not generated yet.");
+      setText("storyFinalResult", "Final measurement not generated yet.");
+      setText("storyProgressResult", "Progress not compared yet.");
+
+      const benchmarkPreview = document.getElementById("storyBenchmarkPreview");
+      const finalPreview = document.getElementById("storyFinalPreview");
+      const printArea = document.getElementById("printArea");
+
+      if (benchmarkPreview) benchmarkPreview.innerHTML = "";
+      if (finalPreview) finalPreview.innerHTML = "";
+      if (printArea) printArea.innerHTML = "";
+    }
+
+    function valueOf(id) {
+      const el = document.getElementById(id);
+      return String(el && el.value ? el.value : "").trim();
+    }
+
+    function numberOf(id, fallback) {
+      const el = document.getElementById(id);
+      const n = Number(el && el.value ? el.value : fallback);
+      return isNaN(n) ? fallback : n;
+    }
+
+    function averageNumbers(values) {
+      const clean = values.map(function(v) { return Number(v) || 0; });
+      if (!clean.length) return 0;
+
+      const sum = clean.reduce(function(a, b) { return a + b; }, 0);
+      return Math.round(sum / clean.length);
+    }
+
+    function dateStampForFile() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const h = String(d.getHours()).padStart(2, "0");
+      const min = String(d.getMinutes()).padStart(2, "0");
+      return y + m + day + "_" + h + min;
+    }
+
+    function getErrorMessage(err) {
+      if (!err) return "Unknown error.";
+      if (err.message) return err.message;
+      return String(err);
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
