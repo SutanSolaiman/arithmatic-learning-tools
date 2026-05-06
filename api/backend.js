@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
@@ -21,14 +20,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       status: "Vercel backend proxy is running.",
-      backendConfigured: true
-    });
-  }
-
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      ok: false,
-      error: "Method not allowed."
+      backendConfigured: true,
+      backendUrlPreview: backendUrl.slice(0, 60)
     });
   }
 
@@ -42,19 +35,20 @@ export default async function handler(req, res) {
     });
 
     const text = await response.text();
+    const contentType = response.headers.get("content-type") || "";
 
-    let data;
     try {
-      data = JSON.parse(text);
+      const data = JSON.parse(text);
+      return res.status(200).json(data);
     } catch (err) {
-      data = {
+      return res.status(502).json({
         ok: false,
         error: "Apps Script returned non-JSON response.",
-        raw: text
-      };
+        appsScriptStatus: response.status,
+        appsScriptContentType: contentType,
+        rawPreview: text.slice(0, 1000)
+      });
     }
-
-    return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json({
       ok: false,
