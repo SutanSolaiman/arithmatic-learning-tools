@@ -288,6 +288,75 @@
       font-size: 13px;
     }
 
+
+    .workflow-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 18px;
+      background: #ffffff;
+    }
+
+    .workflow-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .workflow-step {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .workflow-card h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(120px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .score-grid label {
+      min-height: 34px;
+      line-height: 1.25;
+    }
+
+    .score-grid input {
+      text-align: center;
+    }
+
+    .notes-row {
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1100px) {
+      .score-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-header {
+        flex-direction: column;
+      }
+    }
+
     .print-area {
       display: none;
     }
@@ -589,52 +658,53 @@
         <div id="storyBenchmarkResult" class="output">Benchmark not generated yet.</div>
         <div id="storyBenchmarkPreview" class="cards-preview"></div>
 
-        <h2>Benchmark Skill Scores</h2>
-        <div class="hint">
-          Enter scores from 0 to 100. These scores guide the adaptive learning material.
+        <div class="workflow-card">
+          <div class="workflow-header">
+            <div>
+              <h2>Benchmark Skill Scores</h2>
+              <div class="hint">
+                Enter scores from 0 to 100. Default benchmark score is 60 if no score is entered.
+              </div>
+            </div>
+            <span class="workflow-step">Benchmark default: 60</span>
+          </div>
+
+          <div class="score-grid">
+            <div>
+              <label for="storySkillReading">Reading comprehension</label>
+              <input id="storySkillReading" type="number" value="60" min="0" max="100">
+            </div>
+            <div>
+              <label for="storySkillData">Data identification</label>
+              <input id="storySkillData" type="number" value="60" min="0" max="100">
+            </div>
+            <div>
+              <label for="storySkillOperation">Operation selection</label>
+              <input id="storySkillOperation" type="number" value="60" min="0" max="100">
+            </div>
+            <div>
+              <label for="storySkillMultiplication">Multiplication accuracy</label>
+              <input id="storySkillMultiplication" type="number" value="60" min="0" max="100">
+            </div>
+            <div>
+              <label for="storySkillDivision">Division accuracy</label>
+              <input id="storySkillDivision" type="number" value="60" min="0" max="100">
+            </div>
+            <div>
+              <label for="storySkillRounding">Rounding and capacity logic</label>
+              <input id="storySkillRounding" type="number" value="60" min="0" max="100">
+            </div>
+            <div>
+              <label for="storySkillMultiStep">Multi-step reasoning</label>
+              <input id="storySkillMultiStep" type="number" value="60" min="0" max="100">
+            </div>
+          </div>
+
+          <div class="notes-row">
+            <label for="storyBenchmarkNotes">Benchmark Notes</label>
+            <input id="storyBenchmarkNotes" placeholder="Optional short notes">
+          </div>
         </div>
-
-        <div class="row-3">
-         <div class="row-3">
-  <div>
-    <label for="storySkillReading">Reading comprehension</label>
-    <input id="storySkillReading" type="number" value="60" min="0" max="100">
-  </div>
-  <div>
-    <label for="storySkillData">Data identification</label>
-    <input id="storySkillData" type="number" value="60" min="0" max="100">
-  </div>
-  <div>
-    <label for="storySkillOperation">Operation selection</label>
-    <input id="storySkillOperation" type="number" value="60" min="0" max="100">
-  </div>
-</div>
-
-<div class="row-3">
-  <div>
-    <label for="storySkillMultiplication">Multiplication accuracy</label>
-    <input id="storySkillMultiplication" type="number" value="60" min="0" max="100">
-  </div>
-  <div>
-    <label for="storySkillDivision">Division accuracy</label>
-    <input id="storySkillDivision" type="number" value="60" min="0" max="100">
-  </div>
-  <div>
-    <label for="storySkillRounding">Rounding and capacity logic</label>
-    <input id="storySkillRounding" type="number" value="60" min="0" max="100">
-  </div>
-</div>
-
-<div class="row">
-  <div>
-    <label for="storySkillMultiStep">Multi-step reasoning</label>
-    <input id="storySkillMultiStep" type="number" value="60" min="0" max="100">
-  </div>
-  <div>
-    <label for="storyBenchmarkNotes">Benchmark Notes</label>
-    <input id="storyBenchmarkNotes" placeholder="Optional short notes">
-  </div>
-</div>
 
         <h2>2. Adaptive Learning Material</h2>
         <div class="hint">
@@ -662,47 +732,49 @@
         <div id="storyFinalResult" class="output">Final measurement not generated yet.</div>
         <div id="storyFinalPreview" class="cards-preview"></div>
 
-        <h2>Final Skill Scores</h2>
-        <div class="hint">
-          Enter final measurement scores from 0 to 100, then compare progress.
-        </div>
+        <div class="workflow-card">
+          <div class="workflow-header">
+            <div>
+              <h2>Final Skill Scores</h2>
+              <div class="hint">
+                Enter final measurement scores from 0 to 100. Default final score is 80 if no score is entered.
+              </div>
+            </div>
+            <span class="workflow-step">Final default: 80</span>
+          </div>
 
-        <div class="row-3">
-          <div>
-            <label for="storyFinalReading">Reading comprehension</label>
-            <input id="storyFinalReading" type="number" value="0" min="0" max="100">
+          <div class="score-grid">
+            <div>
+              <label for="storyFinalReading">Reading comprehension</label>
+              <input id="storyFinalReading" type="number" value="80" min="0" max="100">
+            </div>
+            <div>
+              <label for="storyFinalData">Data identification</label>
+              <input id="storyFinalData" type="number" value="80" min="0" max="100">
+            </div>
+            <div>
+              <label for="storyFinalOperation">Operation selection</label>
+              <input id="storyFinalOperation" type="number" value="80" min="0" max="100">
+            </div>
+            <div>
+              <label for="storyFinalMultiplication">Multiplication accuracy</label>
+              <input id="storyFinalMultiplication" type="number" value="80" min="0" max="100">
+            </div>
+            <div>
+              <label for="storyFinalDivision">Division accuracy</label>
+              <input id="storyFinalDivision" type="number" value="80" min="0" max="100">
+            </div>
+            <div>
+              <label for="storyFinalRounding">Rounding and capacity logic</label>
+              <input id="storyFinalRounding" type="number" value="80" min="0" max="100">
+            </div>
+            <div>
+              <label for="storyFinalMultiStep">Multi-step reasoning</label>
+              <input id="storyFinalMultiStep" type="number" value="80" min="0" max="100">
+            </div>
           </div>
-          <div>
-            <label for="storyFinalData">Data identification</label>
-            <input id="storyFinalData" type="number" value="0" min="0" max="100">
-          </div>
-          <div>
-            <label for="storyFinalOperation">Operation selection</label>
-            <input id="storyFinalOperation" type="number" value="0" min="0" max="100">
-          </div>
-        </div>
 
-        <div class="row-3">
-          <div>
-            <label for="storyFinalMultiplication">Multiplication accuracy</label>
-            <input id="storyFinalMultiplication" type="number" value="0" min="0" max="100">
-          </div>
-          <div>
-            <label for="storyFinalDivision">Division accuracy</label>
-            <input id="storyFinalDivision" type="number" value="0" min="0" max="100">
-          </div>
-          <div>
-            <label for="storyFinalRounding">Rounding and capacity logic</label>
-            <input id="storyFinalRounding" type="number" value="0" min="0" max="100">
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="storyFinalMultiStep">Multi-step reasoning</label>
-            <input id="storyFinalMultiStep" type="number" value="0" min="0" max="100">
-          </div>
-          <div>
+          <div class="notes-row">
             <label for="storyFinalNotes">Final Notes</label>
             <input id="storyFinalNotes" placeholder="Optional short notes">
           </div>
@@ -782,24 +854,6 @@
       if (btn) btn.disabled = isBusy;
     }
 
-    function runServer(functionName, args) {
-      return new Promise(function(resolve, reject) {
-        let runner = google.script.run
-          .withSuccessHandler(resolve)
-          .withFailureHandler(reject);
-
-        if (!runner || typeof runner[functionName] !== "function") {
-          reject(new Error("Server function not found: " + functionName));
-          return;
-        }
-
-        if (!args || !args.length) {
-          runner[functionName]();
-        } else {
-          runner[functionName].apply(runner, args);
-        }
-      });
-    }
 
     function runServer(functionName, args) {
   const payload = convertRunServerCallToAppsScriptPayload(functionName, args || []);
@@ -822,6 +876,49 @@
       return data.result;
     });
 }
+
+
+    async function processPdfUpload() {
+      const fileInput = document.getElementById("pdfFile");
+      const instruction = valueOf("pdfInstruction");
+      const file = fileInput.files && fileInput.files[0];
+
+      if (!file) {
+        setText("pdfResult", "Please choose a PDF file first.");
+        return;
+      }
+
+      if (!file.name.toLowerCase().endsWith(".pdf")) {
+        setText("pdfResult", "File must be a PDF.");
+        return;
+      }
+
+      setBusy("pdfBtn", true);
+      setText("pdfResult", "Reading PDF...");
+
+      try {
+        const base64Data = await readFileAsDataUrl(file);
+        setText("pdfResult", "Uploading and processing...");
+
+        const result = await runServer("processGradePdfUpload", [
+          base64Data,
+          file.name,
+          instruction
+        ]);
+
+        if (result && result.html) {
+          setHtml("pdfResult", result.html);
+        } else {
+          setHtml("pdfResult", result || "Done.");
+        }
+
+        await loadResults(false);
+      } catch (err) {
+        setText("pdfResult", "Error: " + getErrorMessage(err));
+      } finally {
+        setBusy("pdfBtn", false);
+      }
+    }
 
     function readFileAsDataUrl(file) {
       return new Promise(function(resolve, reject) {
