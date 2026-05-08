@@ -411,6 +411,23 @@
   line-height: 1.25;
 }
 
+
+.arithmetic-question-row .question-body {
+  gap: 0;
+}
+
+.arithmetic-question-row .question-text {
+  line-height: 1.25;
+}
+
+.story-question-row .question-body {
+  gap: 2px;
+}
+
+.story-question-row .answer-line {
+  display: block;
+}
+
 .answer-line {
   border-bottom: 1px solid #111827;
   height: 12px;
@@ -1122,55 +1139,61 @@
     }
 
    function buildAssessmentCardElement(card) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "assessment-card";
+      const wrapper = document.createElement("div");
+      wrapper.className = "assessment-card";
 
-  const title = document.createElement("div");
-  title.className = "assessment-card-title";
-  title.textContent = card.dayLabel || "Hari";
-  wrapper.appendChild(title);
+      const title = document.createElement("div");
+      title.className = "assessment-card-title";
+      title.textContent = card.dayLabel || "Hari";
+      wrapper.appendChild(title);
 
-  const header = document.createElement("div");
-  header.className = "assessment-card-header";
-  header.innerHTML =
-    "<div>Tanggal: ____________________</div>" +
-    "<div>Nama: ____________________</div>" +
-    "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
-  wrapper.appendChild(header);
+      const header = document.createElement("div");
+      header.className = "assessment-card-header";
+      header.innerHTML =
+        "<div>Tanggal: ____________________</div>" +
+        "<div>Nama: ____________________</div>" +
+        "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
+      wrapper.appendChild(header);
 
-  const list = document.createElement("div");
-  list.className = "question-list";
+      const list = document.createElement("div");
+      list.className = "question-list";
 
-  (card.items || []).forEach(function(item) {
-    const row = document.createElement("div");
-    row.className = "question-row";
+      const isStoryCard = (card.items || []).some(function(item) {
+        return Boolean(item.question) && !Boolean(item.text);
+      });
 
-    const no = document.createElement("div");
-    no.className = "question-number";
-    no.textContent = String(item.no || "") + ".";
+      (card.items || []).forEach(function(item) {
+        const row = document.createElement("div");
+        row.className = isStoryCard ? "question-row story-question-row" : "question-row arithmetic-question-row";
 
-    const body = document.createElement("div");
-    body.className = "question-body";
+        const no = document.createElement("div");
+        no.className = "question-number";
+        no.textContent = String(item.no || "") + ".";
 
-    const text = document.createElement("div");
-    text.className = "question-text";
-    text.textContent = item.text || item.question || "";
+        const body = document.createElement("div");
+        body.className = "question-body";
 
-    const answerLine = document.createElement("div");
-    answerLine.className = "answer-line";
+        const text = document.createElement("div");
+        text.className = "question-text";
+        text.textContent = item.text || item.question || "";
 
-    body.appendChild(text);
-    body.appendChild(answerLine);
+        body.appendChild(text);
 
-    row.appendChild(no);
-    row.appendChild(body);
-    list.appendChild(row);
-  });
+        if (isStoryCard) {
+          const answerLine = document.createElement("div");
+          answerLine.className = "answer-line";
+          body.appendChild(answerLine);
+        }
 
-  wrapper.appendChild(list);
+        row.appendChild(no);
+        row.appendChild(body);
+        list.appendChild(row);
+      });
 
-  return wrapper;
-}
+      wrapper.appendChild(list);
+
+      return wrapper;
+    }
 
     function buildAnswerKeyElement(pageCards) {
       const box = document.createElement("div");
