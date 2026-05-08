@@ -1,39 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Tools</title>
 
-<script>
-async function callBackend(action, payload) {
-  const response = await fetch("/api/learning-tools", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      action: action,
-      payload: payload || {}
-    })
-  });
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --code-bg: #111827;
+      --code-text: #e5e7eb;
+    }
 
-  const rawText = await response.text();
+    * {
+      box-sizing: border-box;
+    }
 
-  let data;
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
 
-  try {
-    data = JSON.parse(rawText);
-  } catch (err) {
-    throw new Error(
-      "Vercel API returned non-JSON response. HTTP " +
-      response.status +
-      ". Raw response starts with: " +
-      rawText.substring(0, 1000)
-    );
-  }
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
 
-  if (!data.ok) {
-    throw new Error(
-      data.error ||
-      data.rawResponseStart ||
-      "Backend returned ok=false."
-    );
-  }
+    .sidebar {
+      width: 280px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      padding: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 10px;
+    }
+
+    .nav button {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    .main {
+      flex: 1;
+      padding: 28px;
+      overflow: auto;
+    }
+
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      background: white;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button.primary,
+    button.secondary,
+    button.danger {
+      padding: 11px 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    button.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    button.secondary {
+      background: #f3f4f6;
+      color: #111827;
+      border: 1px solid var(--border);
+    }
+
+    button.danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .status {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .status.ok {
+      color: var(--success);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .output-card {
+      margin-top: 20px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 12px;
+      min-height: 280px;
+      max-height: 520px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">LT</div>
+        <div>
+          <p class="brand-title">Learning Tools</p>
+          <p class="brand-subtitle">Vercel + Apps Script Backend</p>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="active" onclick="showSection('dashboard', this)">Dashboard</button>
+        <button onclick="showSection('arithmetic', this)">Arithmetic Generator</button>
+        <button onclick="showSection('story', this)">Story Generator</button>
+        <button onclick="showSection('pdf', this)">PDF Grading</button>
+        <button onclick="showSection('results', this)">Results</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="header">
+        <h1>Learning Tools</h1>
+        <p>Use this page to test backend connection, generate arithmetic cards, generate story cards, upload PDF grading, and read results.</p>
+      </section>
+
+      <section id="dashboard" class="page-section">
+        <div class="grid">
+          <div class="card">
+            <h2>Backend Check</h2>
+            <p class="status">This tests Vercel API proxy to Apps Script POST.</p>
+            <div class="button-row">
+              <button class="primary" onclick="runBackendCheck()">Check Backend Config</button>
+              <button class="secondary" onclick="runPing()">Ping Backend</button>
+            </div>
+            <p id="dashboardStatus" class="status"></p>
+          </div>
+
+          <div class="card">
+            <h2>Quick Test</h2>
+            <p class="status">Use these after backend check passes.</p>
+            <div class="button-row">
+              <button class="primary" onclick="runArithmeticTest()">Arithmetic Test</button>
+              <button class="primary" onclick="runStoryTest()">Story Test</button>
+              <button class="secondary" onclick="loadResults()">Load Results</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="arithmetic" class="page-section hidden">
+        <div class="card">
+          <h2>Arithmetic Generator</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Title</label>
+              <input id="arithTitle" value="Applied Quantitative Learning Program" />
+            </div>
+
+            <div class="form-group">
+              <label>Employee ID Prefix</label>
+              <input id="arithPrefix" value="EMP" />
+            </div>
+
+            <div class="form-group">
+              <label>Total Employees</label>
+              <input id="arithEmployees" type="number" value="2" min="1" max="1000" />
+            </div>
+
+            <div class="form-group">
+              <label>Total Days</label>
+              <input id="arithDays" type="number" value="2" min="1" max="365" />
+            </div>
+
+            <div class="form-group">
+              <label>Day Numbers</label>
+              <input id="arithDayNumbers" value="1,2" />
+            </div>
+
+            <div class="form-group">
+              <label>Difficulty</label>
+              <input id="arithDifficulty" type="number" value="3" min="1" max="5" />
+            </div>
+
+            <div class="form-group">
+              <label>Z Digits</label>
+              <input id="arithDigits" type="number" value="3" min="2" max="6" />
+            </div>
+
+            <div class="form-group">
+              <label>Operation Mode</label>
+              <select id="arithOperation">
+                <option value="mix">Mix</option>
+                <option value="mul">Multiplication</option>
+                <option value="div">Division</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="primary" onclick="generateArithmetic()">Generate Arithmetic</button>
+          </div>
+
+          <p id="arithStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section id="story" class="page-section hidden">
+        <div class="card">
+          <h2>Story Generator</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Title</label>
+              <input id="storyTitle" value="Story Quantitative Assessment" />
+            </div>
+
+            <div class="form-group">
+              <label>Employee ID Prefix</label>
+              <input id="storyPrefix" value="EMP" />
+            </div>
+
+            <div class="form-group">
+              <label>Total Employees</label>
+              <input id="storyEmployees" type="number" value="2" min="1" max="50" />
+            </div>
+
+            <div class="form-group">
+              <label>Total Days</label>
+              <input id="storyDays" type="number" value="2" min="1" max="75" />
+            </div>
+
+            <div class="form-group">
+              <label>Day Numbers</label>
+              <input id="storyDayNumbers" value="1,2" />
+            </div>
+
+            <div class="form-group">
+              <label>Difficulty</label>
+              <input id="storyDifficulty" type="number" value="3" min="1" max="5" />
+            </div>
+
+            <div class="form-group full">
+              <label>Learning Context</label>
+              <textarea id="storyContext">PRINTING FACTORY</textarea>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="primary" onclick="generateStory()">Generate Story</button>
+            <button class="secondary" onclick="generateStoryBenchmark()">Benchmark Pack</button>
+            <button class="secondary" onclick="generateStoryFinal()">Final Measurement</button>
+          </div>
+
+          <p id="storyStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section id="pdf" class="page-section hidden">
+        <div class="card">
+          <h2>PDF Grading</h2>
+
+          <div class="form-group">
+            <label>PDF File</label>
+            <input id="pdfFile" type="file" accept="application/pdf" />
+          </div>
+
+          <div class="form-group">
+            <label>Optional Instruction</label>
+            <textarea id="pdfInstruction" placeholder="Optional grading instruction"></textarea>
+          </div>
+
+          <div class="button-row">
+            <button class="primary" onclick="uploadPdfForGrading()">Upload and Grade PDF</button>
+          </div>
+
+          <p id="pdfStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section id="results" class="page-section hidden">
+        <div class="card">
+          <h2>Results</h2>
+
+          <div class="button-row">
+            <button class="primary" onclick="loadResults()">Load Results</button>
+            <button class="secondary" onclick="downloadResultsXls()">Download XLS</button>
+            <button class="danger" onclick="clearResultSheets()">Clear Result Sheets</button>
+          </div>
+
+          <p id="resultsStatus" class="status"></p>
+
+          <div id="resultsTables"></div>
+        </div>
+      </section>
+
+      <section class="card output-card">
+        <h2>Output</h2>
+        <div class="button-row">
+          <button class="secondary" onclick="clearOutput()">Clear Output</button>
+        </div>
+        <pre id="output">Ready.</pre>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let lastResultsData = null;
+
+    async function callBackend(action, payload) {
+      const response = await fetch("/api/learning-tools", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          action: action,
+          payload: payload || {}
+        })
+      });
+
+      const rawText = await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(rawText);
+      } catch (err) {
+        throw new Error(
+          "Vercel API returned non-JSON response. HTTP " +
+          response.status +
+          ". Raw response starts with: " +
+          rawText.substring(0, 1000)
+        );
+      }
+
+      if (!data.ok) {
+        throw new Error(
+          data.error ||
+          data.rawResponseStart ||
+          "Backend returned ok=false."
+        );
+      }
+
+      return data.result;
+    }
+
+    function showSection(id, button) {
+      document.querySelectorAll(".page-section").forEach(function(section) {
+        section.classList.add("hidden");
+      });
+
+      document.getElementById(id).classList.remove("hidden");
+
+      document.querySelectorAll(".nav button").forEach(function(btn) {
+        btn.classList.remove("active");
+      });
+
+      if (button) {
+        button.classList.add("active");
+      }
+    }
+
+    function setStatus(id, message, type) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      el.textContent = message || "";
+      el.className = "status" + (type ? " " + type : "");
+    }
+
+    function showOutput(data) {
+      document.getElementById("output").textContent =
+        typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    function showError(err) {
+      document.getElementById("output").textContent =
+        "Error: " + (err && err.message ? err.message : String(err));
+    }
+
+    function clearOutput() {
+      document.getElementById("output").textContent = "Ready.";
+    }
+
+    function numberValue(id, fallback) {
+      const n = Number(document.getElementById(id).value);
+      return isNaN(n) ? fallback : n;
+    }
+
+    async function runPing() {
+      try {
+        setStatus("dashboardStatus", "Pinging backend...", "");
+        const result = await callBackend("ping", {});
+        showOutput(result);
+        setStatus("dashboardStatus", "Backend ping OK.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("dashboardStatus", "Backend ping failed.", "error");
+      }
+    }
+
+    async function runBackendCheck() {
+      try {
+        setStatus("dashboardStatus", "Checking backend config...", "");
+        const result = await callBackend("checkBackendConfig", {});
+        showOutput(result);
+        setStatus("dashboardStatus", "Backend config OK.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("dashboardStatus", "Backend config failed.", "error");
+      }
+    }
+
+    function getArithmeticPayload() {
+      return {
+        title: document.getElementById("arithTitle").value,
+        employeeIdPrefix: document.getElementById("arithPrefix").value,
+        totalEmployees: numberValue("arithEmployees", 2),
+        totalDays: numberValue("arithDays", 2),
+        dayNumbers: document.getElementById("arithDayNumbers").value,
+        difficulty: numberValue("arithDifficulty", 3),
+        zDigits: numberValue("arithDigits", 3),
+        operationMode: document.getElementById("arithOperation").value
+      };
+    }
+
+    async function generateArithmetic() {
+      try {
+        setStatus("arithStatus", "Generating arithmetic assessment...", "");
+        const result = await callBackend("generateArithmeticAssessmentPack", getArithmeticPayload());
+        showOutput(result);
+        setStatus("arithStatus", "Arithmetic assessment generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("arithStatus", "Arithmetic generation failed.", "error");
+      }
+    }
+
+    async function runArithmeticTest() {
+      try {
+        const result = await callBackend("generateArithmeticAssessmentPack", {
+          title: "Applied Quantitative Learning Program",
+          employeeIdPrefix: "EMP",
+          totalEmployees: 2,
+          totalDays: 2,
+          dayNumbers: "1,2",
+          difficulty: 3,
+          zDigits: 3,
+          operationMode: "mix"
+        });
+        showOutput(result);
+      } catch (err) {
+        showError(err);
+      }
+    }
+
+    function getStoryPayload() {
+      return {
+        title: document.getElementById("storyTitle").value,
+        employeeIdPrefix: document.getElementById("storyPrefix").value,
+        totalEmployees: numberValue("storyEmployees", 2),
+        totalDays: numberValue("storyDays", 2),
+        dayNumbers: document.getElementById("storyDayNumbers").value,
+        difficulty: numberValue("storyDifficulty", 3),
+        learningContext: document.getElementById("storyContext").value
+      };
+    }
+
+    async function generateStory() {
+      try {
+        setStatus("storyStatus", "Generating story assessment...", "");
+        const result = await callBackend("generateStoryAssessmentPack", getStoryPayload());
+        showOutput(result);
+        setStatus("storyStatus", "Story assessment generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("storyStatus", "Story generation failed.", "error");
+      }
+    }
+
+    async function generateStoryBenchmark() {
+      try {
+        setStatus("storyStatus", "Generating story benchmark...", "");
+        const result = await callBackend("generateStoryBenchmarkPack", getStoryPayload());
+        showOutput(result);
+        setStatus("storyStatus", "Story benchmark generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("storyStatus", "Story benchmark failed.", "error");
+      }
+    }
+
+    async function generateStoryFinal() {
+      try {
+        setStatus("storyStatus", "Generating final measurement...", "");
+        const result = await callBackend("generateStoryFinalMeasurementPack", {
+          config: getStoryPayload(),
+          benchmarkResult: {
+            overallScore: 60,
+            skills: {}
+          }
+        });
+        showOutput(result);
+        setStatus("storyStatus", "Final measurement generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("storyStatus", "Final measurement failed.", "error");
+      }
+    }
+
+    async function runStoryTest() {
+      try {
+        const result = await callBackend("generateStoryAssessmentPack", {
+          title: "Story Quantitative Assessment",
+          employeeIdPrefix: "EMP",
+          totalEmployees: 2,
+          totalDays: 2,
+          dayNumbers: "1,2",
+          difficulty: 3,
+          learningContext: "PRINTING FACTORY"
+        });
+        showOutput(result);
+      } catch (err) {
+        showError(err);
+      }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+
+        reader.onload = function() {
+          resolve(reader.result);
+        };
+
+        reader.onerror = function() {
+          reject(reader.error || new Error("Failed to read file."));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadPdfForGrading() {
+      try {
+        const input = document.getElementById("pdfFile");
+        const file = input.files && input.files[0];
+
+        if (!file) {
+          throw new Error("Please select a PDF file.");
+        }
+
+        setStatus("pdfStatus", "Reading PDF...", "");
+
+        const base64Data = await readFileAsBase64(file);
+
+        setStatus("pdfStatus", "Uploading and grading PDF...", "");
+
+        const result = await callBackend("processGradePdfUpload", {
+          base64Data: base64Data,
+          fileName: file.name,
+          optionalInstruction: document.getElementById("pdfInstruction").value
+        });
+
+        showOutput(result);
+        setStatus("pdfStatus", "PDF grading completed.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("pdfStatus", "PDF grading failed.", "error");
+      }
+    }
+
+    async function loadResults() {
+      try {
+        setStatus("resultsStatus", "Loading results...", "");
+        const result = await callBackend("getResultsData", {});
+        lastResultsData = result;
+        showOutput(result);
+        renderResultsTables(result);
+        setStatus("resultsStatus", "Results loaded.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("resultsStatus", "Load results failed.", "error");
+      }
+    }
+
+    function renderResultsTables(data) {
+      const container = document.getElementById("resultsTables");
+      container.innerHTML = "";
+
+      if (!data) {
+        container.textContent = "No data.";
+        return;
+      }
+
+      if (data.detail) {
+        container.appendChild(buildTableElement("Detail: " + data.detail.sheetName, data.detail.headers, data.detail.rows));
+      }
+
+      if (data.summary) {
+        container.appendChild(buildTableElement("Summary: " + data.summary.sheetName, data.summary.headers, data.summary.rows));
+      }
+    }
+
+    function buildTableElement(title, headers, rows) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-wrap";
+
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+      wrapper.appendChild(heading);
+
+      const table = document.createElement("table");
+
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+
+      (headers || []).forEach(function(header) {
+        const th = document.createElement("th");
+        th.textContent = header;
+        headRow.appendChild(th);
+      });
+
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      (rows || []).forEach(function(row) {
+        const tr = document.createElement("tr");
+
+        row.forEach(function(cell) {
+          const td = document.createElement("td");
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      wrapper.appendChild(table);
+
+      return wrapper;
+    }
+
+    function downloadResultsXls() {
+      if (!lastResultsData) {
+        alert("Load results first.");
+        return;
+      }
+
+      let html = "<html><head><meta charset='UTF-8'></head><body>";
+
+      if (lastResultsData.detail) {
+        html += tableToHtml("Detail", lastResultsData.detail.headers, lastResultsData.detail.rows);
+      }
+
+      if (lastResultsData.summary) {
+        html += tableToHtml("Summary", lastResultsData.summary.headers, lastResultsData.summary.rows);
+      }
+
+      html += "</body></html>";
+
+      const blob = new Blob([html], {
+        type: "application/vnd.ms-excel"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "learning-tools-results.xls";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function tableToHtml(title, headers, rows) {
+      let html = "<h2>" + escapeHtml(title) + "</h2><table border='1'><thead><tr>";
+
+      (headers || []).forEach(function(header) {
+        html += "<th>" + escapeHtml(header) + "</th>";
+      });
+
+      html += "</tr></thead><tbody>";
+
+      (rows || []).forEach(function(row) {
+        html += "<tr>";
+
+        row.forEach(function(cell) {
+          html += "<td>" + escapeHtml(cell) + "</td>";
+        });
+
+        html += "</tr>";
+      });
+
+      html += "</tbody></table>";
+
+      return html;
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    async function clearResultSheets() {
+      try {
+        if (!confirm("Clear result sheets?")) {
+          return;
+        }
+
+        setStatus("resultsStatus", "Clearing result sheets...", "");
+        const result = await callBackend("clearResultSheets", {});
+        lastResultsData = null;
+        document.getElementById("resultsTables").innerHTML = "";
+        showOutput(result);
+        setStatus("resultsStatus", "Result sheets cleared.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("resultsStatus", "Clear results failed.", "error");
+      }
+    }
+  </script>
+</body>
+</html>
 
   return data.result;
 }
