@@ -806,8 +806,6 @@ Identity rules:
     let currentPackPage = 0;
     let showPackAnswerKey = false;
     const CARDS_PER_PAGE = 4;
-    const APPS_SCRIPT_DIRECT_URL =
-      "https://script.google.com/macros/s/AKfycbz_YJD5lp6ZphAm9-NNbJtRCjuOav6VQ933oxMvTrIfO8P3j4W7j_T068OA8B4Ml4VI/exec";
 
     async function callBackend(action, payload) {
       const response = await fetch("/api/learning-tools", {
@@ -848,40 +846,6 @@ Identity rules:
     }
 
 
-    async function callAppsScriptDirect(action, payload) {
-  const response = await fetch(APPS_SCRIPT_DIRECT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-      action: action,
-      payload: payload || {}
-    })
-  });
-
-  const rawText = await response.text();
-
-  let data;
-
-  try {
-    data = JSON.parse(rawText);
-  } catch (err) {
-    throw new Error(
-      "Apps Script returned non-JSON response. HTTP " +
-      response.status +
-      ". Raw response starts with:\n" +
-      rawText.substring(0, 2000)
-    );
-  }
-
-  if (!data.ok) {
-    throw new Error(data.error || "Apps Script returned ok=false.");
-  }
-
-  return data.result;
-}
-    
     function showSection(id, button) {
       document.querySelectorAll(".page-section").forEach(function(section) {
         section.classList.add("hidden");
@@ -1402,9 +1366,9 @@ Identity rules:
           throw new Error("PDF could not be read as base64 data.");
         }
 
-        setStatus("pdfStatus", "Uploading and grading PDF directly to Apps Script...", "");
+        setStatus("pdfStatus", "Uploading and grading PDF through Vercel proxy...", "");
 
-        const result = await callAppsScriptDirect("processGradePdfUpload", {
+        const result = await callBackend("processGradePdfUpload", {
           base64Data: base64Data,
           fileName: file.name,
           optionalInstruction: document.getElementById("pdfInstruction").value
