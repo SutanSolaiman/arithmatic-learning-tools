@@ -378,8 +378,8 @@
 
 .assessment-card-header {
   display: grid;
-  gap: 7px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 12px;
   font-size: 12px;
   line-height: 1.25;
 }
@@ -433,22 +433,31 @@
   width: 100%;
 }
 
-.answer-line.short {
+.answer-line {
+  border-bottom: 1px solid #111827;
+  height: 12px;
   width: 100%;
 }
 
-.answer-line.medium {
-  width: 100%;
-}
-
-.answer-line.long {
-  width: 100%;
-}
-
-    .answer-key {
+.answer-key {
       margin-top: 18px;
       font-size: 13px;
     }
+
+
+.answer-key-panel {
+  width: 100%;
+  max-width: 794px;
+  margin: 16px auto 0;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.answer-key-panel h3 {
+  margin-top: 0;
+}
 
     .answer-key h3 {
       margin-bottom: 8px;
@@ -666,7 +675,7 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Title</label>
-              <input id="storyTitle" value="Story Quantitative Assessment" />
+              <input id="storyTitle" value="Asesmen Cerita Kuantitatif" />
             </div>
 
             <div class="form-group">
@@ -696,7 +705,7 @@
 
             <div class="form-group full">
               <label>Learning Context</label>
-              <textarea id="storyContext">PRINTING FACTORY</textarea>
+              <textarea id="storyContext">PERCETAKAN</textarea>
             </div>
           </div>
 
@@ -766,7 +775,7 @@
 
           <div class="pack-toolbar-right">
             <button class="primary" onclick="window.print()">Print</button>
-            <button class="secondary" onclick="toggleAnswerKey()">Show / Hide Answer Key</button>
+            <button id="answerKeyToggleBtn" class="secondary" onclick="toggleAnswerKey()">Show Answer Key</button>
             <button class="secondary" onclick="hidePackViewer()">Hide Cards</button>
           </div>
         </div>
@@ -974,7 +983,9 @@
         totalDays: numberValue("storyDays", 2),
         dayNumbers: document.getElementById("storyDayNumbers").value,
         difficulty: numberValue("storyDifficulty", 3),
-        learningContext: document.getElementById("storyContext").value
+        learningContext: document.getElementById("storyContext").value,
+        language: "id",
+        outputLanguage: "Bahasa Indonesia"
       };
     }
 
@@ -1062,13 +1073,15 @@
     async function runStoryTest() {
       try {
         const result = await callBackend("generateStoryAssessmentPack", {
-          title: "Story Quantitative Assessment",
+          title: "Asesmen Cerita Kuantitatif",
           employeeIdPrefix: "EMP",
           totalEmployees: 2,
           totalDays: 2,
           dayNumbers: "1,2",
           difficulty: 3,
-          learningContext: "PRINTING FACTORY"
+          learningContext: "PERCETAKAN",
+          language: "id",
+          outputLanguage: "Bahasa Indonesia"
         });
 
         currentPack = result;
@@ -1091,10 +1104,14 @@
     function renderAssessmentPack(pack) {
       const viewer = document.getElementById("packViewer");
       const container = document.getElementById("packPageContainer");
+      const toggleBtn = document.getElementById("answerKeyToggleBtn");
 
       if (!pack || !pack.cards || !pack.cards.length) {
         viewer.classList.add("hidden");
         container.innerHTML = "";
+        if (toggleBtn) {
+          toggleBtn.textContent = "Show Answer Key";
+        }
         return;
       }
 
@@ -1116,6 +1133,10 @@
       document.getElementById("packPageIndicator").textContent =
         "Page " + (currentPackPage + 1) + " of " + totalPages;
 
+      if (toggleBtn) {
+        toggleBtn.textContent = showPackAnswerKey ? "Hide Answer Key" : "Show Answer Key";
+      }
+
       container.innerHTML = "";
 
       const page = document.createElement("div");
@@ -1129,79 +1150,78 @@
       });
 
       page.appendChild(grid);
+      container.appendChild(page);
 
       if (showPackAnswerKey) {
-        page.appendChild(buildAnswerKeyElement(pageCards));
+        container.appendChild(buildAnswerKeyElement(pageCards, currentPackPage + 1, totalPages));
       }
-
-      container.appendChild(page);
     }
 
-   function buildAssessmentCardElement(card) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "assessment-card";
+    function buildAssessmentCardElement(card) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "assessment-card";
 
-  const title = document.createElement("div");
-  title.className = "assessment-card-title";
-  title.textContent = card.dayLabel || "Hari";
-  wrapper.appendChild(title);
+      const title = document.createElement("div");
+      title.className = "assessment-card-title";
+      title.textContent = card.dayLabel || "Hari";
+      wrapper.appendChild(title);
 
-  const header = document.createElement("div");
-  header.className = "assessment-card-header";
-  header.innerHTML =
-    "<div>Tanggal: ____________________</div>" +
-    "<div>Nama: ____________________</div>" +
-    "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
-  wrapper.appendChild(header);
+      const header = document.createElement("div");
+      header.className = "assessment-card-header";
+      header.innerHTML =
+        "<div>Tanggal: ____________________</div>" +
+        "<div>Nama: ____________________</div>" +
+        "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
+      wrapper.appendChild(header);
 
-  const list = document.createElement("div");
-  list.className = "question-list";
+      const list = document.createElement("div");
+      list.className = "question-list";
 
-  const isStoryCard = (card.items || []).some(function(item) {
-    return Boolean(item.question) && !Boolean(item.text);
-  });
+      const isStoryCard = (card.items || []).some(function(item) {
+        return Boolean(item.question) && !Boolean(item.text);
+      });
 
-  (card.items || []).forEach(function(item) {
-    const row = document.createElement("div");
-    row.className = isStoryCard
-      ? "question-row story-question-row"
-      : "question-row arithmetic-question-row";
+      (card.items || []).forEach(function(item) {
+        const row = document.createElement("div");
+        row.className = isStoryCard
+          ? "question-row story-question-row"
+          : "question-row arithmetic-question-row";
 
-    const no = document.createElement("div");
-    no.className = "question-number";
-    no.textContent = String(item.no || "") + ".";
+        const no = document.createElement("div");
+        no.className = "question-number";
+        no.textContent = String(item.no || "") + ".";
 
-    const body = document.createElement("div");
-    body.className = "question-body";
+        const body = document.createElement("div");
+        body.className = "question-body";
 
-    const text = document.createElement("div");
-    text.className = "question-text";
-    text.textContent = item.text || item.question || "";
+        const text = document.createElement("div");
+        text.className = "question-text";
+        text.textContent = item.text || item.question || "";
 
-    body.appendChild(text);
+        body.appendChild(text);
 
-    if (isStoryCard) {
-      const answerLine = document.createElement("div");
-      answerLine.className = "answer-line";
-      body.appendChild(answerLine);
+        if (isStoryCard) {
+          const answerLine = document.createElement("div");
+          answerLine.className = "answer-line";
+          body.appendChild(answerLine);
+        }
+
+        row.appendChild(no);
+        row.appendChild(body);
+        list.appendChild(row);
+      });
+
+      wrapper.appendChild(list);
+
+      return wrapper;
     }
 
-    row.appendChild(no);
-    row.appendChild(body);
-    list.appendChild(row);
-  });
-
-  wrapper.appendChild(list);
-
-  return wrapper;
-}
-
-    function buildAnswerKeyElement(pageCards) {
+    function buildAnswerKeyElement(pageCards, pageNumber, totalPages) {
       const box = document.createElement("div");
-      box.className = "answer-key";
+      box.className = "answer-key answer-key-panel";
 
       const title = document.createElement("h3");
-      title.textContent = "Answer Key";
+      title.textContent = "Answer Key, Page " + pageNumber + " of " + totalPages;
       box.appendChild(title);
 
       const table = document.createElement("table");
@@ -1272,7 +1292,10 @@
     }
 
     function toggleAnswerKey() {
-      if (!currentPack) {
+      if (!currentPack || !currentPack.cards || !currentPack.cards.length) {
+        showOutput({
+          message: "Generate an assessment first, then show the answer key."
+        });
         return;
       }
 
