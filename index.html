@@ -249,8 +249,8 @@
       color: var(--code-text);
       padding: 16px;
       border-radius: 12px;
-      min-height: 280px;
-      max-height: 520px;
+      min-height: 180px;
+      max-height: 360px;
       overflow: auto;
       font-size: 13px;
       line-height: 1.5;
@@ -281,7 +281,126 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
+    }
+
+    .pack-viewer {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .pack-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .pack-toolbar-left,
+    .pack-toolbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .page-indicator {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .card-page {
+      width: 100%;
+      max-width: 794px;
+      min-height: 1123px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      padding: 20px;
+    }
+
+    .assessment-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+  min-height: 1040px;
+}
+
+/* Vertical dotted cutting line */
+.assessment-grid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 2px dotted #9ca3af;
+  transform: translateX(-1px);
+  z-index: 1;
+}
+
+/* Horizontal dotted cutting line */
+.assessment-grid::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 2px dotted #9ca3af;
+  transform: translateY(-1px);
+  z-index: 1;
+}
+
+.assessment-card {
+  position: relative;
+  border: none;
+  border-radius: 0;
+  padding: 18px;
+  min-height: 520px;
+  page-break-inside: avoid;
+  z-index: 2;
+}
+
+    .assessment-card-title {
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .assessment-card-header {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .question-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 8px;
+    }
+
+    .answer-key {
+      margin-top: 18px;
+      font-size: 13px;
+    }
+
+    .answer-key h3 {
+      margin-bottom: 8px;
     }
 
     @media (max-width: 900px) {
@@ -305,6 +424,55 @@
 
       .form-grid {
         grid-template-columns: 1fr;
+      }
+
+      .assessment-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assessment-card {
+        min-height: auto;
+      }
+
+      .card-page {
+        min-height: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .sidebar,
+      .header,
+      .page-section,
+      .output-card,
+      .pack-toolbar {
+        display: none !important;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .main {
+        padding: 0;
+      }
+
+      .pack-viewer {
+        display: block !important;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .card-page {
+        border: none;
+        max-width: none;
+        min-height: auto;
+        page-break-after: always;
       }
     }
   </style>
@@ -341,14 +509,14 @@
     <main class="main">
       <section class="header">
         <h1>Learning Tools</h1>
-        <p>Use this page to test backend connection, generate arithmetic cards, generate story cards, upload PDF grading, and read results.</p>
+        <p>Generate printable assessment cards with pagination, answer key, PDF grading, and results view.</p>
       </section>
 
       <section id="dashboard" class="page-section">
         <div class="grid">
           <div class="card">
             <h2>Backend Check</h2>
-            <p class="status">This tests Vercel API proxy to Apps Script POST.</p>
+            <p class="status">This tests Vercel API proxy to Apps Script.</p>
             <div class="button-row">
               <button class="primary" onclick="runBackendCheck()">Check Backend Config</button>
               <button class="secondary" onclick="runPing()">Ping Backend</button>
@@ -516,17 +684,39 @@
       </section>
 
       <section class="card output-card">
-        <h2>Output</h2>
+        <h2>Output Summary</h2>
         <div class="button-row">
           <button class="secondary" onclick="clearOutput()">Clear Output</button>
         </div>
         <pre id="output">Ready.</pre>
+      </section>
+
+      <section id="packViewer" class="pack-viewer hidden">
+        <div class="pack-toolbar">
+          <div class="pack-toolbar-left">
+            <button class="secondary" onclick="previousPackPage()">Previous</button>
+            <button class="secondary" onclick="nextPackPage()">Next</button>
+            <span id="packPageIndicator" class="page-indicator"></span>
+          </div>
+
+          <div class="pack-toolbar-right">
+            <button class="primary" onclick="window.print()">Print</button>
+            <button class="secondary" onclick="toggleAnswerKey()">Show / Hide Answer Key</button>
+            <button class="secondary" onclick="hidePackViewer()">Hide Cards</button>
+          </div>
+        </div>
+
+        <div id="packPageContainer"></div>
       </section>
     </main>
   </div>
 
   <script>
     let lastResultsData = null;
+    let currentPack = null;
+    let currentPackPage = 0;
+    let showPackAnswerKey = false;
+    const CARDS_PER_PAGE = 4;
 
     async function callBackend(action, payload) {
       const response = await fetch("/api/learning-tools", {
@@ -651,9 +841,28 @@
     async function generateArithmetic() {
       try {
         setStatus("arithStatus", "Generating arithmetic assessment...", "");
-        const result = await callBackend("generateArithmeticAssessmentPack", getArithmeticPayload());
-        showOutput(result);
+
+        const result = await callBackend(
+          "generateArithmeticAssessmentPack",
+          getArithmeticPayload()
+        );
+
+        currentPack = result;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(result);
+
+        showOutput({
+          message: "Arithmetic assessment generated.",
+          generationMode: result.meta && result.meta.generationMode,
+          totalCards: result.cards ? result.cards.length : 0,
+          totalDays: result.meta && result.meta.totalDays,
+          totalEmployees: result.meta && result.meta.totalEmployees
+        });
+
         setStatus("arithStatus", "Arithmetic assessment generated.", "ok");
+
       } catch (err) {
         showError(err);
         setStatus("arithStatus", "Arithmetic generation failed.", "error");
@@ -672,7 +881,21 @@
           zDigits: 3,
           operationMode: "mix"
         });
-        showOutput(result);
+
+        currentPack = result;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(result);
+
+        showOutput({
+          message: "Arithmetic assessment generated.",
+          generationMode: result.meta && result.meta.generationMode,
+          totalCards: result.cards ? result.cards.length : 0,
+          totalDays: result.meta && result.meta.totalDays,
+          totalEmployees: result.meta && result.meta.totalEmployees
+        });
+
       } catch (err) {
         showError(err);
       }
@@ -693,8 +916,23 @@
     async function generateStory() {
       try {
         setStatus("storyStatus", "Generating story assessment...", "");
+
         const result = await callBackend("generateStoryAssessmentPack", getStoryPayload());
-        showOutput(result);
+
+        currentPack = result;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(result);
+
+        showOutput({
+          message: "Story assessment generated.",
+          generationMode: result.meta && result.meta.generationMode,
+          totalCards: result.cards ? result.cards.length : 0,
+          totalDays: result.meta && result.meta.totalDays,
+          totalEmployees: result.meta && result.meta.totalEmployees
+        });
+
         setStatus("storyStatus", "Story assessment generated.", "ok");
       } catch (err) {
         showError(err);
@@ -705,8 +943,20 @@
     async function generateStoryBenchmark() {
       try {
         setStatus("storyStatus", "Generating story benchmark...", "");
+
         const result = await callBackend("generateStoryBenchmarkPack", getStoryPayload());
-        showOutput(result);
+
+        currentPack = result;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(result);
+
+        showOutput({
+          message: "Story benchmark generated.",
+          totalCards: result.cards ? result.cards.length : 0
+        });
+
         setStatus("storyStatus", "Story benchmark generated.", "ok");
       } catch (err) {
         showError(err);
@@ -717,6 +967,7 @@
     async function generateStoryFinal() {
       try {
         setStatus("storyStatus", "Generating final measurement...", "");
+
         const result = await callBackend("generateStoryFinalMeasurementPack", {
           config: getStoryPayload(),
           benchmarkResult: {
@@ -724,7 +975,18 @@
             skills: {}
           }
         });
-        showOutput(result);
+
+        currentPack = result;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(result);
+
+        showOutput({
+          message: "Final measurement generated.",
+          totalCards: result.cards ? result.cards.length : 0
+        });
+
         setStatus("storyStatus", "Final measurement generated.", "ok");
       } catch (err) {
         showError(err);
@@ -743,10 +1005,201 @@
           difficulty: 3,
           learningContext: "PRINTING FACTORY"
         });
-        showOutput(result);
+
+        currentPack = result;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(result);
+
+        showOutput({
+          message: "Story assessment generated.",
+          generationMode: result.meta && result.meta.generationMode,
+          totalCards: result.cards ? result.cards.length : 0
+        });
+
       } catch (err) {
         showError(err);
       }
+    }
+
+    function renderAssessmentPack(pack) {
+      const viewer = document.getElementById("packViewer");
+      const container = document.getElementById("packPageContainer");
+
+      if (!pack || !pack.cards || !pack.cards.length) {
+        viewer.classList.add("hidden");
+        container.innerHTML = "";
+        return;
+      }
+
+      viewer.classList.remove("hidden");
+
+      const totalPages = Math.ceil(pack.cards.length / CARDS_PER_PAGE);
+
+      if (currentPackPage < 0) {
+        currentPackPage = 0;
+      }
+
+      if (currentPackPage >= totalPages) {
+        currentPackPage = totalPages - 1;
+      }
+
+      const start = currentPackPage * CARDS_PER_PAGE;
+      const pageCards = pack.cards.slice(start, start + CARDS_PER_PAGE);
+
+      document.getElementById("packPageIndicator").textContent =
+        "Page " + (currentPackPage + 1) + " of " + totalPages;
+
+      container.innerHTML = "";
+
+      const page = document.createElement("div");
+      page.className = "card-page";
+
+      const grid = document.createElement("div");
+      grid.className = "assessment-grid";
+
+      pageCards.forEach(function(card) {
+        grid.appendChild(buildAssessmentCardElement(card));
+      });
+
+      page.appendChild(grid);
+
+      if (showPackAnswerKey) {
+        page.appendChild(buildAnswerKeyElement(pageCards));
+      }
+
+      container.appendChild(page);
+    }
+
+    function buildAssessmentCardElement(card) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "assessment-card";
+
+      const title = document.createElement("div");
+      title.className = "assessment-card-title";
+      title.textContent = card.dayLabel || "Hari";
+
+      wrapper.appendChild(title);
+
+      const header = document.createElement("div");
+      header.className = "assessment-card-header";
+      header.innerHTML =
+        "<div>Tanggal: ____________________</div>" +
+        "<div>Nama: ____________________</div>" +
+        "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
+
+      wrapper.appendChild(header);
+
+      const list = document.createElement("div");
+      list.className = "question-list";
+
+      (card.items || []).forEach(function(item) {
+        const row = document.createElement("div");
+        row.className = "question-row";
+
+        const no = document.createElement("div");
+        no.textContent = String(item.no || "") + ".";
+
+        const text = document.createElement("div");
+        text.textContent = item.text || item.question || "";
+
+        row.appendChild(no);
+        row.appendChild(text);
+        list.appendChild(row);
+      });
+
+      wrapper.appendChild(list);
+
+      return wrapper;
+    }
+
+    function buildAnswerKeyElement(pageCards) {
+      const box = document.createElement("div");
+      box.className = "answer-key";
+
+      const title = document.createElement("h3");
+      title.textContent = "Answer Key";
+      box.appendChild(title);
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+
+      ["Day", "Employee ID", "Answers"].forEach(function(header) {
+        const th = document.createElement("th");
+        th.textContent = header;
+        headRow.appendChild(th);
+      });
+
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      pageCards.forEach(function(card) {
+        const tr = document.createElement("tr");
+
+        const day = document.createElement("td");
+        day.textContent = card.dayLabel || "";
+
+        const employee = document.createElement("td");
+        employee.textContent = card.employeeId || "";
+
+        const answers = document.createElement("td");
+        answers.textContent = (card.items || [])
+          .map(function(item) {
+            return item.no + ". " + item.answer;
+          })
+          .join(", ");
+
+        tr.appendChild(day);
+        tr.appendChild(employee);
+        tr.appendChild(answers);
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      box.appendChild(table);
+
+      return box;
+    }
+
+    function nextPackPage() {
+      if (!currentPack || !currentPack.cards) {
+        return;
+      }
+
+      const totalPages = Math.ceil(currentPack.cards.length / CARDS_PER_PAGE);
+
+      if (currentPackPage < totalPages - 1) {
+        currentPackPage++;
+        renderAssessmentPack(currentPack);
+      }
+    }
+
+    function previousPackPage() {
+      if (!currentPack || !currentPack.cards) {
+        return;
+      }
+
+      if (currentPackPage > 0) {
+        currentPackPage--;
+        renderAssessmentPack(currentPack);
+      }
+    }
+
+    function toggleAnswerKey() {
+      if (!currentPack) {
+        return;
+      }
+
+      showPackAnswerKey = !showPackAnswerKey;
+      renderAssessmentPack(currentPack);
+    }
+
+    function hidePackViewer() {
+      document.getElementById("packViewer").classList.add("hidden");
     }
 
     function readFileAsBase64(file) {
