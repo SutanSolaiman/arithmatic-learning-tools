@@ -1,5 +1,5 @@
 const APPS_SCRIPT_BACKEND_URL =
-  "https://script.google.com/macros/s/AKfycbxeHjL44E0O80T0XNV6EWNa2h83sDRT1Jeb3IXyNPmq81FczGKqlC6NK5D8vUclwSrY/exec";
+  "https://script.google.com/macros/s/AKfycbz_YJD5lp6ZphAm9-NNbJtRCjuOav6VQ933oxMvTrIfO8P3j4W7j_T068OA8B4Ml4VI/exec";
 
 export default async function handler(req, res) {
   try {
