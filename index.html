@@ -362,10 +362,11 @@
   position: relative;
   border: none;
   border-radius: 0;
-  padding: 18px;
+  padding: 12px;
   min-height: 520px;
   page-break-inside: avoid;
   z-index: 2;
+  overflow: hidden;
 }
 
     .assessment-card-title {
@@ -377,23 +378,56 @@
 
 .assessment-card-header {
   display: grid;
-  gap: 14px;
-  margin-bottom: 22px;
-  font-size: 14px;
-  line-height: 1.5;
+  gap: 7px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.25;
 }
 
-    .question-list {
-      display: grid;
-      gap: 10px;
-      font-size: 15px;
-    }
+.question-list {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 1.25;
+}
 
-    .question-row {
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 8px;
-    }
+.question-row {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 5px;
+  align-items: start;
+}
+
+.question-number {
+  font-weight: 600;
+}
+
+.question-body {
+  display: grid;
+  gap: 4px;
+}
+
+.question-text {
+  line-height: 1.25;
+}
+
+.answer-line {
+  border-bottom: 1px solid #111827;
+  height: 12px;
+  width: 100%;
+}
+
+.answer-line.short {
+  width: 100%;
+}
+
+.answer-line.medium {
+  width: 100%;
+}
+
+.answer-line.long {
+  width: 100%;
+}
 
     .answer-key {
       margin-top: 18px;
@@ -1087,47 +1121,56 @@
       container.appendChild(page);
     }
 
-    function buildAssessmentCardElement(card) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "assessment-card";
+   function buildAssessmentCardElement(card) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "assessment-card";
 
-      const title = document.createElement("div");
-      title.className = "assessment-card-title";
-      title.textContent = card.dayLabel || "Hari";
+  const title = document.createElement("div");
+  title.className = "assessment-card-title";
+  title.textContent = card.dayLabel || "Hari";
+  wrapper.appendChild(title);
 
-      wrapper.appendChild(title);
+  const header = document.createElement("div");
+  header.className = "assessment-card-header";
+  header.innerHTML =
+    "<div>Tanggal: ____________________</div>" +
+    "<div>Nama: ____________________</div>" +
+    "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
+  wrapper.appendChild(header);
 
-      const header = document.createElement("div");
-      header.className = "assessment-card-header";
-      header.innerHTML =
-        "<div>Tanggal: ____________________</div>" +
-        "<div>Nama: ____________________</div>" +
-        "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
+  const list = document.createElement("div");
+  list.className = "question-list";
 
-      wrapper.appendChild(header);
+  (card.items || []).forEach(function(item) {
+    const row = document.createElement("div");
+    row.className = "question-row";
 
-      const list = document.createElement("div");
-      list.className = "question-list";
+    const no = document.createElement("div");
+    no.className = "question-number";
+    no.textContent = String(item.no || "") + ".";
 
-      (card.items || []).forEach(function(item) {
-        const row = document.createElement("div");
-        row.className = "question-row";
+    const body = document.createElement("div");
+    body.className = "question-body";
 
-        const no = document.createElement("div");
-        no.textContent = String(item.no || "") + ".";
+    const text = document.createElement("div");
+    text.className = "question-text";
+    text.textContent = item.text || item.question || "";
 
-        const text = document.createElement("div");
-        text.textContent = item.text || item.question || "";
+    const answerLine = document.createElement("div");
+    answerLine.className = "answer-line";
 
-        row.appendChild(no);
-        row.appendChild(text);
-        list.appendChild(row);
-      });
+    body.appendChild(text);
+    body.appendChild(answerLine);
 
-      wrapper.appendChild(list);
+    row.appendChild(no);
+    row.appendChild(body);
+    list.appendChild(row);
+  });
 
-      return wrapper;
-    }
+  wrapper.appendChild(list);
+
+  return wrapper;
+}
 
     function buildAnswerKeyElement(pageCards) {
       const box = document.createElement("div");
