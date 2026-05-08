@@ -1,21 +1,15 @@
+const APPS_SCRIPT_BACKEND_URL =
+  "https://script.google.com/macros/s/AKfycbxeHjL44E0O80T0XNV6EWNa2h83sDRT1Jeb3IXyNPmq81FczGKqlC6NK5D8vUclwSrY/exec";
+
 export default async function handler(req, res) {
   try {
-    const backendUrl = process.env.APPS_SCRIPT_BACKEND_URL;
-
-    if (!backendUrl) {
-      return res.status(500).json({
-        ok: false,
-        error: "Missing APPS_SCRIPT_BACKEND_URL in Vercel Environment Variables."
-      });
-    }
-
     if (req.method === "GET") {
       return res.status(200).json({
         ok: true,
         route: "/api/learning-tools",
-        message: "Vercel API route is online. Use POST for Learning Tools actions.",
-        backendUrlConfigured: true,
-        backendUrlStart: backendUrl.substring(0, 120)
+        message: "Vercel API route is online.",
+        backendUrl: APPS_SCRIPT_BACKEND_URL,
+        expected: "POST requests will be forwarded to Apps Script."
       });
     }
 
@@ -28,7 +22,7 @@ export default async function handler(req, res) {
 
     const sentBody = JSON.stringify(req.body || {});
 
-    const appsScriptResponse = await fetch(backendUrl, {
+    const appsScriptResponse = await fetch(APPS_SCRIPT_BACKEND_URL, {
       method: "POST",
       redirect: "follow",
       headers: {
@@ -49,12 +43,14 @@ export default async function handler(req, res) {
         ok: false,
         error:
           "Apps Script returned non-JSON response.\n\n" +
-          "Apps Script status: " +
+          "Status: " +
           appsScriptResponse.status +
           "\nContent-Type: " +
           contentType +
           "\nFinal URL: " +
           appsScriptResponse.url +
+          "\n\nSent body:\n" +
+          sentBody +
           "\n\nRAW RESPONSE START:\n" +
           rawText.substring(0, 3000),
         appsScriptStatus: appsScriptResponse.status,
