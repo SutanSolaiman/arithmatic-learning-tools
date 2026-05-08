@@ -50,9 +50,17 @@
       margin-bottom: 28px;
     }
 
+    .brand-logo-img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
     .brand-logo {
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       border-radius: 12px;
       background: var(--primary);
       color: white;
@@ -306,10 +314,18 @@
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-logo">LT</div>
+        <img
+          src="/assets/dr-logo.png"
+          alt="DR Logo"
+          class="brand-logo-img"
+          onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='flex';"
+        />
+
+        <div id="fallbackLogo" class="brand-logo" style="display:none;">DR</div>
+
         <div>
           <p class="brand-title">Learning Tools</p>
-          <p class="brand-subtitle">Vercel + Apps Script Backend</p>
+          <p class="brand-subtitle">Arithmetic, Story, PDF Grading</p>
         </div>
       </div>
 
@@ -935,7 +951,3 @@
   </script>
 </body>
 </html>
-
-  return data.result;
-}
-</script>
