@@ -7,9 +7,8 @@ export default async function handler(req, res) {
       return res.status(200).json({
         ok: true,
         route: "/api/learning-tools",
-        message: "Vercel API route is online.",
-        backendUrl: APPS_SCRIPT_BACKEND_URL,
-        expected: "POST requests will be forwarded to Apps Script."
+        message: "This is the NEW hardcoded Vercel API route.",
+        backendUrl: APPS_SCRIPT_BACKEND_URL
       });
     }
 
@@ -32,7 +31,6 @@ export default async function handler(req, res) {
     });
 
     const rawText = await appsScriptResponse.text();
-    const contentType = appsScriptResponse.headers.get("content-type") || "";
 
     let data;
 
@@ -41,24 +39,24 @@ export default async function handler(req, res) {
     } catch (err) {
       return res.status(502).json({
         ok: false,
-        error:
-          "Apps Script returned non-JSON response.\n\n" +
-          "Status: " +
-          appsScriptResponse.status +
-          "\nContent-Type: " +
-          contentType +
-          "\nFinal URL: " +
-          appsScriptResponse.url +
-          "\n\nSent body:\n" +
-          sentBody +
-          "\n\nRAW RESPONSE START:\n" +
-          rawText.substring(0, 3000),
-        appsScriptStatus: appsScriptResponse.status,
-        appsScriptStatusText: appsScriptResponse.statusText,
-        appsScriptContentType: contentType,
-        appsScriptFinalUrl: appsScriptResponse.url,
-        sentBody: sentBody,
-        rawResponseStart: rawText.substring(0, 3000)
+        error: [
+          "Apps Script returned non-JSON response.",
+          "",
+          "This request was sent to:",
+          APPS_SCRIPT_BACKEND_URL,
+          "",
+          "Apps Script final URL:",
+          appsScriptResponse.url,
+          "",
+          "Apps Script status:",
+          String(appsScriptResponse.status),
+          "",
+          "Sent body:",
+          sentBody,
+          "",
+          "Raw response starts:",
+          rawText.substring(0, 3000)
+        ].join("\n")
       });
     }
 
