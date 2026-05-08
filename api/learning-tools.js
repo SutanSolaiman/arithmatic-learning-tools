@@ -7,7 +7,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         ok: true,
         route: "/api/learning-tools",
-        message: "Vercel API route is online. This version sends actions to Apps Script using GET bridge.",
+        message: "Vercel API route is online. Small actions use GET bridge. PDF upload uses POST proxy.",
         backendUrl: APPS_SCRIPT_BACKEND_URL
       });
     }
@@ -15,50 +15,25 @@ export default async function handler(req, res) {
     if (req.method !== "POST") {
       return res.status(405).json({
         ok: false,
-        error: "Method not allowed. Use POST from frontend to Vercel."
+        error: "Method not allowed. Use POST."
       });
     }
 
     const requestBody = req.body || {};
-    const encodedRequest = Buffer
-      .from(JSON.stringify(requestBody), "utf8")
-      .toString("base64url");
+    const action = String(requestBody.action || "").trim();
 
-    const url =
-      APPS_SCRIPT_BACKEND_URL +
-      "?bridge=1&request=" +
-      encodeURIComponent(encodedRequest);
-
-    const appsScriptResponse = await fetch(url, {
-      method: "GET",
-      redirect: "follow"
-    });
-
-    const rawText = await appsScriptResponse.text();
-
-    let data;
-
-    try {
-      data = JSON.parse(rawText);
-    } catch (err) {
-      return res.status(502).json({
+    if (!action) {
+      return res.status(400).json({
         ok: false,
-        error: [
-          "Apps Script returned non-JSON response through GET bridge.",
-          "",
-          "Status: " + appsScriptResponse.status,
-          "Final URL: " + appsScriptResponse.url,
-          "",
-          "Request sent:",
-          JSON.stringify(requestBody),
-          "",
-          "Raw response starts:",
-          rawText.substring(0, 3000)
-        ].join("\n")
+        error: "Missing action."
       });
     }
 
-    return res.status(200).json(data);
+    if (action === "processGradePdfUpload") {
+      return await forwardLargePdfPostToAppsScript_(res, requestBody);
+    }
+
+    return await forwardSmallActionViaGetBridge_(res, requestBody);
 
   } catch (err) {
     return res.status(500).json({
@@ -67,4 +42,100 @@ export default async function handler(req, res) {
       stack: err && err.stack ? String(err.stack) : ""
     });
   }
+}
+
+async function forwardSmallActionViaGetBridge_(res, requestBody) {
+  const encodedRequest = Buffer
+    .from(JSON.stringify(requestBody), "utf8")
+    .toString("base64url");
+
+  const url =
+    APPS_SCRIPT_BACKEND_URL +
+    "?bridge=1&request=" +
+    encodeURIComponent(encodedRequest);
+
+  const appsScriptResponse = await fetch(url, {
+    method: "GET",
+    redirect: "follow"
+  });
+
+  const rawText = await appsScriptResponse.text();
+
+  let data;
+
+  try {
+    data = JSON.parse(rawText);
+  } catch (err) {
+    return res.status(502).json({
+      ok: false,
+      error: [
+        "Apps Script returned non-JSON response through GET bridge.",
+        "",
+        "Status: " + appsScriptResponse.status,
+        "Final URL: " + appsScriptResponse.url,
+        "",
+        "Request action:",
+        String(requestBody.action || ""),
+        "",
+        "Raw response starts:",
+        rawText.substring(0, 3000)
+      ].join("\n")
+    });
+  }
+
+  return res.status(200).json(data);
+}
+
+async function forwardLargePdfPostToAppsScript_(res, requestBody) {
+  const sentBody = JSON.stringify(requestBody);
+
+  const appsScriptResponse = await fetch(APPS_SCRIPT_BACKEND_URL, {
+    method: "POST",
+    redirect: "follow",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: sentBody
+  });
+
+  const rawText = await appsScriptResponse.text();
+  const contentType = appsScriptResponse.headers.get("content-type") || "";
+
+  let data;
+
+  try {
+    data = JSON.parse(rawText);
+  } catch (err) {
+    return res.status(502).json({
+      ok: false,
+      error: [
+        "Apps Script returned non-JSON response through PDF POST proxy.",
+        "",
+        "Status: " + appsScriptResponse.status,
+        "Content-Type: " + contentType,
+        "Final URL: " + appsScriptResponse.url,
+        "",
+        "Payload action:",
+        String(requestBody.action || ""),
+        "",
+        "Payload base64 length:",
+        String(
+          requestBody &&
+          requestBody.payload &&
+          requestBody.payload.base64Data
+            ? requestBody.payload.base64Data.length
+            : 0
+        ),
+        "",
+        "Raw response starts:",
+        rawText.substring(0, 3000)
+      ].join("\n"),
+      appsScriptStatus: appsScriptResponse.status,
+      appsScriptContentType: contentType,
+      appsScriptFinalUrl: appsScriptResponse.url,
+      rawResponseStart: rawText.substring(0, 3000)
+    });
+  }
+
+  return res.status(200).json(data);
 }
