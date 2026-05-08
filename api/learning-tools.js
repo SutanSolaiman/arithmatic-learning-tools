@@ -7,7 +7,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         ok: true,
         route: "/api/learning-tools",
-        message: "This is the NEW hardcoded Vercel API route.",
+        message: "Vercel API route is online. This version sends actions to Apps Script using GET bridge.",
         backendUrl: APPS_SCRIPT_BACKEND_URL
       });
     }
@@ -15,19 +15,23 @@ export default async function handler(req, res) {
     if (req.method !== "POST") {
       return res.status(405).json({
         ok: false,
-        error: "Method not allowed. Use POST."
+        error: "Method not allowed. Use POST from frontend to Vercel."
       });
     }
 
-    const sentBody = JSON.stringify(req.body || {});
+    const requestBody = req.body || {};
+    const encodedRequest = Buffer
+      .from(JSON.stringify(requestBody), "utf8")
+      .toString("base64url");
 
-    const appsScriptResponse = await fetch(APPS_SCRIPT_BACKEND_URL, {
-      method: "POST",
-      redirect: "follow",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: sentBody
+    const url =
+      APPS_SCRIPT_BACKEND_URL +
+      "?bridge=1&request=" +
+      encodeURIComponent(encodedRequest);
+
+    const appsScriptResponse = await fetch(url, {
+      method: "GET",
+      redirect: "follow"
     });
 
     const rawText = await appsScriptResponse.text();
@@ -40,19 +44,13 @@ export default async function handler(req, res) {
       return res.status(502).json({
         ok: false,
         error: [
-          "Apps Script returned non-JSON response.",
+          "Apps Script returned non-JSON response through GET bridge.",
           "",
-          "This request was sent to:",
-          APPS_SCRIPT_BACKEND_URL,
+          "Status: " + appsScriptResponse.status,
+          "Final URL: " + appsScriptResponse.url,
           "",
-          "Apps Script final URL:",
-          appsScriptResponse.url,
-          "",
-          "Apps Script status:",
-          String(appsScriptResponse.status),
-          "",
-          "Sent body:",
-          sentBody,
+          "Request sent:",
+          JSON.stringify(requestBody),
           "",
           "Raw response starts:",
           rawText.substring(0, 3000)
