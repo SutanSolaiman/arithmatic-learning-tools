@@ -15,20 +15,7 @@ export default async function handler(req, res) {
         route: "/api/learning-tools",
         message: "Vercel API route is online. Use POST for Learning Tools actions.",
         backendUrlConfigured: true,
-        backendUrlStart: backendUrl.substring(0, 100),
-        testPayload: {
-          action: "generateArithmeticAssessmentPack",
-          payload: {
-            title: "Applied Quantitative Learning Program",
-            employeeIdPrefix: "EMP",
-            totalEmployees: 2,
-            totalDays: 2,
-            dayNumbers: "1,2",
-            difficulty: 3,
-            zDigits: 3,
-            operationMode: "mix"
-          }
-        }
+        backendUrlStart: backendUrl.substring(0, 120)
       });
     }
 
