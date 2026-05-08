@@ -3,7 +3,8 @@ export default async function handler(req, res) {
     if (req.method !== "POST") {
       return res.status(405).json({
         ok: false,
-        error: "Method not allowed. Use POST."
+        error: "Use POST only.",
+        message: "This API route forwards POST actions to Apps Script."
       });
     }
 
@@ -12,7 +13,7 @@ export default async function handler(req, res) {
     if (!backendUrl) {
       return res.status(500).json({
         ok: false,
-        error: "Missing Vercel environment variable: APPS_SCRIPT_BACKEND_URL"
+        error: "Missing APPS_SCRIPT_BACKEND_URL in Vercel Environment Variables."
       });
     }
 
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
         ok: false,
         error: "Apps Script returned non-JSON response.",
         appsScriptStatus: appsScriptResponse.status,
-        rawResponseStart: rawText.substring(0, 1000)
+        rawResponseStart: rawText.substring(0, 1500)
       });
     }
 
