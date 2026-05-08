@@ -550,15 +550,15 @@
         throw new Error(
           "Vercel API returned non-JSON response. HTTP " +
           response.status +
-          ". Raw response starts with: " +
-          rawText.substring(0, 1000)
+          ". Raw response starts with:\n" +
+          rawText.substring(0, 3000)
         );
       }
 
       if (!data.ok) {
         throw new Error(
-          data.error ||
           data.rawResponseStart ||
+          data.error ||
           "Backend returned ok=false."
         );
       }
@@ -584,7 +584,9 @@
 
     function setStatus(id, message, type) {
       const el = document.getElementById(id);
-      if (!el) return;
+      if (!el) {
+        return;
+      }
 
       el.textContent = message || "";
       el.className = "status" + (type ? " " + type : "");
