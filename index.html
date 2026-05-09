@@ -41,6 +41,7 @@
       background: var(--card);
       border-right: 1px solid var(--border);
       padding: 24px;
+      flex-shrink: 0;
     }
 
     .brand {
@@ -55,7 +56,8 @@
       height: 48px;
       object-fit: contain;
       border-radius: 12px;
-      background: #ffffff;
+      background: transparent;
+      display: block;
     }
 
     .brand-logo {
@@ -64,10 +66,11 @@
       border-radius: 12px;
       background: var(--primary);
       color: white;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       font-weight: 700;
+      flex-shrink: 0;
     }
 
     .brand-title {
@@ -224,12 +227,17 @@
       color: white;
     }
 
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
     .status {
       margin-top: 14px;
       font-size: 13px;
       color: var(--muted);
+      line-height: 1.5;
     }
-
 
     .status.ok {
       color: var(--success);
@@ -316,145 +324,140 @@
       color: var(--muted);
     }
 
- .card-page {
-  width: 100%;
-  max-width: 794px;
-  min-height: 1123px;
-  margin: 0 auto;
-  background: #ffffff;
-  border: 1px solid #d1d5db;
-  padding: 24px;
-}
+    .card-page {
+      width: 100%;
+      max-width: 794px;
+      min-height: 1123px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      padding: 24px;
+    }
 
     .assessment-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 0;
-  min-height: 1040px;
-}
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 0;
+      min-height: 1040px;
+    }
 
-/* Vertical dotted cutting line */
-.assessment-grid::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  border-left: 2px dotted #9ca3af;
-  transform: translateX(-1px);
-  z-index: 1;
-}
+    .assessment-grid::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      border-left: 2px dotted #9ca3af;
+      transform: translateX(-1px);
+      z-index: 1;
+    }
 
-/* Horizontal dotted cutting line */
-.assessment-grid::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  border-top: 2px dotted #9ca3af;
-  transform: translateY(-1px);
-  z-index: 1;
-}
+    .assessment-grid::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 2px dotted #9ca3af;
+      transform: translateY(-1px);
+      z-index: 1;
+    }
 
-.assessment-card {
-  position: relative;
-  border: none;
-  border-radius: 0;
-  padding: 12px;
-  min-height: 520px;
-  page-break-inside: avoid;
-  z-index: 2;
-  overflow: hidden;
-}
+    .assessment-card {
+      position: relative;
+      border: none;
+      border-radius: 0;
+      padding: 12px;
+      min-height: 520px;
+      page-break-inside: avoid;
+      z-index: 2;
+      overflow: hidden;
+    }
 
     .assessment-card-title {
       font-weight: 700;
       font-size: 16px;
       text-align: center;
       margin-bottom: 8px;
+      text-transform: uppercase;
     }
 
-.assessment-card-header {
-  display: grid;
-  gap: 22px;
-  margin-bottom: 22px;
-  font-size: 12px;
-  line-height: 1.35;
-}
+    .assessment-card-header {
+      display: grid;
+      gap: 22px;
+      margin-bottom: 22px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
 
-.question-list {
-  display: grid;
-  gap: 0;
-  font-size: 12px;
-  line-height: 1.25;
-}
+    .question-list {
+      display: grid;
+      gap: 0;
+      font-size: 12px;
+      line-height: 1.25;
+    }
 
-.question-row {
-  display: grid;
-  grid-template-columns: 18px 1fr;
-  gap: 5px;
-  align-items: start;
-}
+    .question-row {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 5px;
+      align-items: start;
+    }
 
-.question-number {
-  font-weight: 600;
-  line-height: 1.25;
-}
+    .question-number {
+      font-weight: 600;
+      line-height: 1.25;
+    }
 
-.question-body {
-  display: grid;
-}
+    .question-body {
+      display: grid;
+    }
 
-.question-text {
-  line-height: 1.25;
-}
+    .question-text {
+      line-height: 1.25;
+    }
 
-.arithmetic-question-row {
-  margin-bottom: 13px;
-}
+    .arithmetic-question-row {
+      margin-bottom: 13px;
+    }
 
-.arithmetic-question-row .question-body {
-  gap: 0;
-}
+    .arithmetic-question-row .question-body {
+      gap: 0;
+    }
 
-.story-question-row {
-  margin-bottom: 7px;
-}
+    .story-question-row {
+      margin-bottom: 7px;
+    }
 
-.story-question-row .question-body {
-  gap: 3px;
-}
+    .story-question-row .question-body {
+      gap: 3px;
+    }
 
-.answer-line {
-  border-bottom: 1px solid #111827;
-  height: 10px;
-  width: 100%;
-}
+    .answer-line {
+      border-bottom: 1px solid #111827;
+      height: 10px;
+      width: 100%;
+    }
 
-.answer-key {
+    .answer-key {
       margin-top: 18px;
       font-size: 13px;
     }
 
+    .answer-key-panel {
+      width: 100%;
+      max-width: 794px;
+      margin: 16px auto 0;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
 
-.answer-key-panel {
-  width: 100%;
-  max-width: 794px;
-  margin: 16px auto 0;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-}
-
-.answer-key-panel h3 {
-  margin-top: 0;
-}
-
-    .answer-key h3 {
+    .answer-key-panel h3 {
+      margin-top: 0;
       margin-bottom: 8px;
     }
 
@@ -496,22 +499,26 @@
     }
 
     @media print {
-      
-      .assessment-grid::before {
-  border-left: 1.5px dotted #000000;
-}
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
 
-.assessment-grid::after {
-  border-top: 1.5px dotted #000000;
-}
-
-.assessment-card {
-  border: none;
-  min-height: 50%;
-}
-      
       body {
         background: #ffffff;
+      }
+
+      .assessment-grid::before {
+        border-left: 1.5px dotted #000000;
+      }
+
+      .assessment-grid::after {
+        border-top: 1.5px dotted #000000;
+      }
+
+      .assessment-card {
+        border: none;
+        min-height: 50%;
       }
 
       .sidebar,
@@ -559,7 +566,7 @@
           onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='flex';"
         />
 
-        <div id="fallbackLogo" class="brand-logo" style="display:none;">DR</div>
+        <div id="fallbackLogo" class="brand-logo">DR</div>
 
         <div>
           <p class="brand-title">Learning Tools</p>
@@ -586,17 +593,20 @@
         <div class="grid">
           <div class="card">
             <h2>Backend Check</h2>
-            <p class="status">This tests Vercel API proxy to Apps Script.</p>
+            <p class="status">This tests the Vercel API proxy to Apps Script.</p>
+
             <div class="button-row">
-              <button class="primary" onclick="runBackendCheck()">Check Backend Config</button>
-              <button class="secondary" onclick="runPing()">Ping Backend</button>
+              <button id="backendCheckBtn" class="primary" onclick="runBackendCheck()">Check Backend Config</button>
+              <button id="pingBtn" class="secondary" onclick="runPing()">Ping Backend</button>
             </div>
+
             <p id="dashboardStatus" class="status"></p>
           </div>
 
           <div class="card">
             <h2>Quick Test</h2>
             <p class="status">Use these after backend check passes.</p>
+
             <div class="button-row">
               <button class="primary" onclick="runArithmeticTest()">Arithmetic Test</button>
               <button class="primary" onclick="runStoryTest()">Story Test</button>
@@ -612,42 +622,42 @@
 
           <div class="form-grid">
             <div class="form-group">
-              <label>Title</label>
+              <label for="arithTitle">Title</label>
               <input id="arithTitle" value="Applied Quantitative Learning Program" />
             </div>
 
             <div class="form-group">
-              <label>Employee ID Prefix</label>
+              <label for="arithPrefix">Employee ID Prefix</label>
               <input id="arithPrefix" value="EMP" />
             </div>
 
             <div class="form-group">
-              <label>Total Employees</label>
+              <label for="arithEmployees">Total Employees</label>
               <input id="arithEmployees" type="number" value="2" min="1" max="1000" />
             </div>
 
             <div class="form-group">
-              <label>Total Days</label>
+              <label for="arithDays">Total Days</label>
               <input id="arithDays" type="number" value="2" min="1" max="365" />
             </div>
 
             <div class="form-group">
-              <label>Day Numbers</label>
+              <label for="arithDayNumbers">Day Numbers</label>
               <input id="arithDayNumbers" value="1,2" />
             </div>
 
             <div class="form-group">
-              <label>Difficulty</label>
+              <label for="arithDifficulty">Difficulty</label>
               <input id="arithDifficulty" type="number" value="3" min="1" max="5" />
             </div>
 
             <div class="form-group">
-              <label>Z Digits</label>
+              <label for="arithDigits">Z Digits</label>
               <input id="arithDigits" type="number" value="3" min="2" max="6" />
             </div>
 
             <div class="form-group">
-              <label>Operation Mode</label>
+              <label for="arithOperation">Operation Mode</label>
               <select id="arithOperation">
                 <option value="mix">Mix</option>
                 <option value="mul">Multiplication</option>
@@ -657,7 +667,7 @@
           </div>
 
           <div class="button-row">
-            <button class="primary" onclick="generateArithmetic()">Generate Arithmetic</button>
+            <button id="arithGenerateBtn" class="primary" onclick="generateArithmetic()">Generate Arithmetic</button>
           </div>
 
           <p id="arithStatus" class="status"></p>
@@ -670,45 +680,45 @@
 
           <div class="form-grid">
             <div class="form-group">
-              <label>Title</label>
+              <label for="storyTitle">Title</label>
               <input id="storyTitle" value="Asesmen Cerita Kuantitatif" />
             </div>
 
             <div class="form-group">
-              <label>Employee ID Prefix</label>
+              <label for="storyPrefix">Employee ID Prefix</label>
               <input id="storyPrefix" value="EMP" />
             </div>
 
             <div class="form-group">
-              <label>Total Employees</label>
+              <label for="storyEmployees">Total Employees</label>
               <input id="storyEmployees" type="number" value="2" min="1" max="50" />
             </div>
 
             <div class="form-group">
-              <label>Total Days</label>
+              <label for="storyDays">Total Days</label>
               <input id="storyDays" type="number" value="2" min="1" max="75" />
             </div>
 
             <div class="form-group">
-              <label>Day Numbers</label>
+              <label for="storyDayNumbers">Day Numbers</label>
               <input id="storyDayNumbers" value="1,2" />
             </div>
 
             <div class="form-group">
-              <label>Difficulty</label>
+              <label for="storyDifficulty">Difficulty</label>
               <input id="storyDifficulty" type="number" value="3" min="1" max="5" />
             </div>
 
             <div class="form-group full">
-              <label>Learning Context</label>
+              <label for="storyContext">Learning Context</label>
               <textarea id="storyContext">PERCETAKAN</textarea>
             </div>
           </div>
 
           <div class="button-row">
-            <button class="primary" onclick="generateStory()">Generate Story</button>
-            <button class="secondary" onclick="generateStoryBenchmark()">Benchmark Pack</button>
-            <button class="secondary" onclick="generateStoryFinal()">Final Measurement</button>
+            <button id="storyGenerateBtn" class="primary" onclick="generateStory()">Generate Story</button>
+            <button id="storyBenchmarkBtn" class="secondary" onclick="generateStoryBenchmark()">Benchmark Pack</button>
+            <button id="storyFinalBtn" class="secondary" onclick="generateStoryFinal()">Final Measurement</button>
           </div>
 
           <p id="storyStatus" class="status"></p>
@@ -720,12 +730,12 @@
           <h2>PDF Grading</h2>
 
           <div class="form-group">
-            <label>PDF File</label>
-            <input id="pdfFile" type="file" accept="application/pdf" />
+            <label for="pdfFile">PDF File</label>
+            <input id="pdfFile" type="file" accept="application/pdf,.pdf" onchange="rememberSelectedPdfFile(this)" />
           </div>
 
           <div class="form-group">
-            <label>Optional Instruction</label>
+            <label for="pdfInstruction">Optional Instruction</label>
             <textarea id="pdfInstruction" placeholder="Optional grading instruction">Extract Hari, Tanggal, Nama, ID Karyawan, and Nilai from every visible assessment card.
 
 Grade each card on a 0 to 10 scale.
@@ -750,7 +760,7 @@ Identity rules:
           </div>
 
           <div class="button-row">
-            <button class="primary" onclick="uploadPdfForGrading()">Upload and Grade PDF</button>
+            <button id="pdfUploadBtn" class="primary" onclick="uploadPdfForGrading()">Upload and Grade PDF</button>
           </div>
 
           <p id="pdfStatus" class="status"></p>
@@ -762,9 +772,9 @@ Identity rules:
           <h2>Results</h2>
 
           <div class="button-row">
-            <button class="primary" onclick="loadResults()">Load Results</button>
+            <button id="loadResultsBtn" class="primary" onclick="loadResults()">Load Results</button>
             <button class="secondary" onclick="downloadResultsXls()">Download XLS</button>
-            <button class="danger" onclick="clearResultSheets()">Clear Result Sheets</button>
+            <button id="clearResultsBtn" class="danger" onclick="clearResultSheets()">Clear Result Sheets</button>
           </div>
 
           <p id="resultsStatus" class="status"></p>
@@ -773,13 +783,13 @@ Identity rules:
         </div>
       </section>
 
-<section class="card output-card hidden">
-  <h2>Output Summary</h2>
-  <div class="button-row">
-    <button class="secondary" onclick="clearOutput()">Clear Output</button>
-  </div>
-  <pre id="output">Ready.</pre>
-</section>
+      <section class="card output-card hidden">
+        <h2>Output Summary</h2>
+        <div class="button-row">
+          <button class="secondary" onclick="clearOutput()">Clear Output</button>
+        </div>
+        <pre id="output">Ready.</pre>
+      </section>
 
       <section id="packViewer" class="pack-viewer hidden">
         <div class="pack-toolbar">
@@ -807,11 +817,14 @@ Identity rules:
     let currentPackPage = 0;
     let showPackAnswerKey = false;
     let selectedPdfFile = null;
+
     const CARDS_PER_PAGE = 4;
     const DAILY_GRADE_SHEET_NAME = "Nilai_Harian";
     const SUMMARY_SHEET_NAME = "Summary";
 
     async function callBackend(action, payload) {
+      const normalizedPayload = payload || {};
+
       const response = await fetch("/api/learning-tools", {
         method: "POST",
         headers: {
@@ -819,7 +832,8 @@ Identity rules:
         },
         body: JSON.stringify({
           action: action,
-          payload: payload || {}
+          payload: normalizedPayload,
+          args: [normalizedPayload]
         })
       });
 
@@ -838,24 +852,37 @@ Identity rules:
         );
       }
 
+      if (!response.ok) {
+        throw new Error(
+          data.rawResponseStart ||
+          data.error ||
+          data.message ||
+          "HTTP " + response.status
+        );
+      }
+
       if (!data.ok) {
         throw new Error(
           data.rawResponseStart ||
           data.error ||
+          data.message ||
           "Backend returned ok=false."
         );
       }
 
-      return data.result;
+      return typeof data.result !== "undefined" ? data.result : data;
     }
-
 
     function showSection(id, button) {
       document.querySelectorAll(".page-section").forEach(function(section) {
         section.classList.add("hidden");
       });
 
-      document.getElementById(id).classList.remove("hidden");
+      const target = document.getElementById(id);
+
+      if (target) {
+        target.classList.remove("hidden");
+      }
 
       document.querySelectorAll(".nav button").forEach(function(btn) {
         btn.classList.remove("active");
@@ -868,12 +895,21 @@ Identity rules:
 
     function setStatus(id, message, type) {
       const el = document.getElementById(id);
+
       if (!el) {
         return;
       }
 
       el.textContent = message || "";
       el.className = "status" + (type ? " " + type : "");
+    }
+
+    function setBusy(id, busy) {
+      const el = document.getElementById(id);
+
+      if (el) {
+        el.disabled = Boolean(busy);
+      }
     }
 
     function showOutput(data) {
@@ -914,35 +950,66 @@ Identity rules:
     }
 
     function clearOutput() {
-      document.getElementById("output").textContent = "Ready.";
+      const output = document.getElementById("output");
+
+      if (output) {
+        output.textContent = "Ready.";
+      }
     }
 
     function numberValue(id, fallback) {
-      const n = Number(document.getElementById(id).value);
+      const el = document.getElementById(id);
+      const n = Number(el && el.value);
+
       return isNaN(n) ? fallback : n;
     }
 
     async function runPing() {
+      setBusy("pingBtn", true);
+
       try {
         setStatus("dashboardStatus", "Pinging backend...", "");
+
         const result = await callBackend("ping", {});
+
         showOutput(result);
         setStatus("dashboardStatus", "Backend ping OK.", "ok");
       } catch (err) {
         showError(err);
         setStatus("dashboardStatus", "Backend ping failed.", "error");
+      } finally {
+        setBusy("pingBtn", false);
       }
     }
 
     async function runBackendCheck() {
+      setBusy("backendCheckBtn", true);
+
       try {
         setStatus("dashboardStatus", "Checking backend config...", "");
+
         const result = await callBackend("checkBackendConfig", {});
-        showOutput(result);
-        setStatus("dashboardStatus", "Backend config OK.", "ok");
+
+        showOutput({
+          status: "Backend online",
+          app: result && result.app ? result.app : "Learning Tools",
+          mode: result && result.mode ? result.mode : "",
+          message: result && result.message ? result.message : "",
+          availableGetTests: result && result.availableGetTests ? result.availableGetTests : [],
+          availablePostActions: result && result.availablePostActions ? result.availablePostActions : [],
+          timestamp: result && result.timestamp ? result.timestamp : ""
+        });
+
+        setStatus(
+          "dashboardStatus",
+          "Backend config OK. Use the buttons for POST app actions.",
+          "ok"
+        );
       } catch (err) {
         showError(err);
         setStatus("dashboardStatus", "Backend config failed.", "error");
+      } finally {
+        setBusy("backendCheckBtn", false);
       }
     }
 
@@ -960,6 +1027,8 @@ Identity rules:
     }
 
     async function generateArithmetic() {
+      setBusy("arithGenerateBtn", true);
+
       try {
         setStatus("arithStatus", "Generating arithmetic assessment...", "");
 
@@ -976,17 +1045,18 @@ Identity rules:
 
         showOutput({
           message: "Arithmetic assessment generated.",
-          generationMode: result.meta && result.meta.generationMode,
-          totalCards: result.cards ? result.cards.length : 0,
-          totalDays: result.meta && result.meta.totalDays,
-          totalEmployees: result.meta && result.meta.totalEmployees
+          generationMode: result && result.meta && result.meta.generationMode,
+          totalCards: result && result.cards ? result.cards.length : 0,
+          totalDays: result && result.meta && result.meta.totalDays,
+          totalEmployees: result && result.meta && result.meta.totalEmployees
         });
 
         setStatus("arithStatus", "Arithmetic assessment generated.", "ok");
-
       } catch (err) {
         showError(err);
         setStatus("arithStatus", "Arithmetic generation failed.", "error");
+      } finally {
+        setBusy("arithGenerateBtn", false);
       }
     }
 
@@ -1011,12 +1081,11 @@ Identity rules:
 
         showOutput({
           message: "Arithmetic assessment generated.",
-          generationMode: result.meta && result.meta.generationMode,
-          totalCards: result.cards ? result.cards.length : 0,
-          totalDays: result.meta && result.meta.totalDays,
-          totalEmployees: result.meta && result.meta.totalEmployees
+          generationMode: result && result.meta && result.meta.generationMode,
+          totalCards: result && result.cards ? result.cards.length : 0,
+          totalDays: result && result.meta && result.meta.totalDays,
+          totalEmployees: result && result.meta && result.meta.totalEmployees
         });
-
       } catch (err) {
         showError(err);
       }
@@ -1037,10 +1106,15 @@ Identity rules:
     }
 
     async function generateStory() {
+      setBusy("storyGenerateBtn", true);
+
       try {
         setStatus("storyStatus", "Generating story assessment...", "");
 
-        const result = await callBackend("generateStoryAssessmentPack", getStoryPayload());
+        const result = await callBackend(
+          "generateStoryAssessmentPack",
+          getStoryPayload()
+        );
 
         currentPack = result;
         currentPackPage = 0;
@@ -1050,24 +1124,31 @@ Identity rules:
 
         showOutput({
           message: "Story assessment generated.",
-          generationMode: result.meta && result.meta.generationMode,
-          totalCards: result.cards ? result.cards.length : 0,
-          totalDays: result.meta && result.meta.totalDays,
-          totalEmployees: result.meta && result.meta.totalEmployees
+          generationMode: result && result.meta && result.meta.generationMode,
+          totalCards: result && result.cards ? result.cards.length : 0,
+          totalDays: result && result.meta && result.meta.totalDays,
+          totalEmployees: result && result.meta && result.meta.totalEmployees
         });
 
         setStatus("storyStatus", "Story assessment generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("storyStatus", "Story generation failed.", "error");
+      } finally {
+        setBusy("storyGenerateBtn", false);
       }
     }
 
     async function generateStoryBenchmark() {
+      setBusy("storyBenchmarkBtn", true);
+
       try {
         setStatus("storyStatus", "Generating story benchmark...", "");
 
-        const result = await callBackend("generateStoryBenchmarkPack", getStoryPayload());
+        const result = await callBackend(
+          "generateStoryBenchmarkPack",
+          getStoryPayload()
+        );
 
         currentPack = result;
         currentPackPage = 0;
@@ -1077,17 +1158,21 @@ Identity rules:
 
         showOutput({
           message: "Story benchmark generated.",
-          totalCards: result.cards ? result.cards.length : 0
+          totalCards: result && result.cards ? result.cards.length : 0
         });
 
         setStatus("storyStatus", "Story benchmark generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("storyStatus", "Story benchmark failed.", "error");
+      } finally {
+        setBusy("storyBenchmarkBtn", false);
       }
     }
 
     async function generateStoryFinal() {
+      setBusy("storyFinalBtn", true);
+
       try {
         setStatus("storyStatus", "Generating final measurement...", "");
 
@@ -1095,7 +1180,16 @@ Identity rules:
           config: getStoryPayload(),
           benchmarkResult: {
             overallScore: 60,
-            skills: {}
+            notes: "",
+            skills: {
+              reading_comprehension: 60,
+              data_identification: 60,
+              operation_selection: 60,
+              multiplication_accuracy: 60,
+              division_accuracy: 60,
+              rounding_capacity_logic: 60,
+              multi_step_reasoning: 60
+            }
           }
         });
 
@@ -1107,13 +1201,15 @@ Identity rules:
 
         showOutput({
           message: "Final measurement generated.",
-          totalCards: result.cards ? result.cards.length : 0
+          totalCards: result && result.cards ? result.cards.length : 0
         });
 
         setStatus("storyStatus", "Final measurement generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("storyStatus", "Final measurement failed.", "error");
+      } finally {
+        setBusy("storyFinalBtn", false);
       }
     }
 
@@ -1139,10 +1235,9 @@ Identity rules:
 
         showOutput({
           message: "Story assessment generated.",
-          generationMode: result.meta && result.meta.generationMode,
-          totalCards: result.cards ? result.cards.length : 0
+          generationMode: result && result.meta && result.meta.generationMode,
+          totalCards: result && result.cards ? result.cards.length : 0
         });
-
       } catch (err) {
         showError(err);
       }
@@ -1153,12 +1248,18 @@ Identity rules:
       const container = document.getElementById("packPageContainer");
       const toggleBtn = document.getElementById("answerKeyToggleBtn");
 
+      if (!viewer || !container) {
+        return;
+      }
+
       if (!pack || !pack.cards || !pack.cards.length) {
         viewer.classList.add("hidden");
         container.innerHTML = "";
+
         if (toggleBtn) {
           toggleBtn.textContent = "Show Answer Key";
         }
+
         return;
       }
 
@@ -1177,8 +1278,11 @@ Identity rules:
       const start = currentPackPage * CARDS_PER_PAGE;
       const pageCards = pack.cards.slice(start, start + CARDS_PER_PAGE);
 
-      document.getElementById("packPageIndicator").textContent =
-        "Page " + (currentPackPage + 1) + " of " + totalPages;
+      const pageIndicator = document.getElementById("packPageIndicator");
+
+      if (pageIndicator) {
+        pageIndicator.textContent = "Page " + (currentPackPage + 1) + " of " + totalPages;
+      }
 
       if (toggleBtn) {
         toggleBtn.textContent = showPackAnswerKey ? "Hide Answer Key" : "Show Answer Key";
@@ -1210,7 +1314,7 @@ Identity rules:
 
       const title = document.createElement("div");
       title.className = "assessment-card-title";
-      title.textContent = card.dayLabel || "Hari";
+      title.textContent = formatDayLabel(card);
       wrapper.appendChild(title);
 
       const header = document.createElement("div");
@@ -1218,17 +1322,19 @@ Identity rules:
       header.innerHTML =
         "<div>Tanggal: ____________________</div>" +
         "<div>Nama: ____________________</div>" +
-        "<div>ID Karyawan: " + escapeHtml(card.employeeId || "") + "</div>";
+        "<div>ID Karyawan: " + escapeHtml(card && card.employeeId ? card.employeeId : "") + "</div>";
       wrapper.appendChild(header);
 
       const list = document.createElement("div");
       list.className = "question-list";
 
-      const isStoryCard = (card.items || []).some(function(item) {
+      const items = card && Array.isArray(card.items) ? card.items : [];
+
+      const isStoryCard = items.some(function(item) {
         return Boolean(item.question) && !Boolean(item.text);
       });
 
-      (card.items || []).forEach(function(item) {
+      items.forEach(function(item, index) {
         const row = document.createElement("div");
         row.className = isStoryCard
           ? "question-row story-question-row"
@@ -1236,7 +1342,7 @@ Identity rules:
 
         const no = document.createElement("div");
         no.className = "question-number";
-        no.textContent = String(item.no || "") + ".";
+        no.textContent = String(item.no || index + 1) + ".";
 
         const body = document.createElement("div");
         body.className = "question-body";
@@ -1261,6 +1367,30 @@ Identity rules:
       wrapper.appendChild(list);
 
       return wrapper;
+    }
+
+    function formatDayLabel(card) {
+      if (!card) {
+        return "HARI";
+      }
+
+      if (card.dayNumber) {
+        return "HARI " + Number(card.dayNumber);
+      }
+
+      const raw = String(card.dayLabel || "").trim();
+
+      if (!raw) {
+        return "HARI";
+      }
+
+      const match = raw.match(/\d+/);
+
+      if (match) {
+        return "HARI " + Number(match[0]);
+      }
+
+      return raw.toUpperCase();
     }
 
     function buildAnswerKeyElement(pageCards, pageNumber, totalPages) {
@@ -1290,15 +1420,15 @@ Identity rules:
         const tr = document.createElement("tr");
 
         const day = document.createElement("td");
-        day.textContent = card.dayLabel || "";
+        day.textContent = formatDayLabel(card);
 
         const employee = document.createElement("td");
-        employee.textContent = card.employeeId || "";
+        employee.textContent = card && card.employeeId ? card.employeeId : "";
 
         const answers = document.createElement("td");
-        answers.textContent = (card.items || [])
-          .map(function(item) {
-            return item.no + ". " + item.answer;
+        answers.textContent = (card && card.items ? card.items : [])
+          .map(function(item, index) {
+            return (item.no || index + 1) + ". " + (item.answer || "");
           })
           .join(", ");
 
@@ -1351,7 +1481,11 @@ Identity rules:
     }
 
     function hidePackViewer() {
-      document.getElementById("packViewer").classList.add("hidden");
+      const viewer = document.getElementById("packViewer");
+
+      if (viewer) {
+        viewer.classList.add("hidden");
+      }
     }
 
     function rememberSelectedPdfFile(input) {
@@ -1400,6 +1534,8 @@ Identity rules:
     }
 
     async function uploadPdfForGrading() {
+      setBusy("pdfUploadBtn", true);
+
       try {
         const file = getSelectedPdfFile();
 
@@ -1435,20 +1571,24 @@ Identity rules:
 
         if (result && result.html) {
           const resultsBox = document.getElementById("resultsTables");
+
           if (resultsBox) {
             resultsBox.innerHTML = result.html;
           }
         }
 
         setStatus("pdfStatus", "PDF grading completed.", "ok");
-
       } catch (err) {
         const message = showError(err);
         setStatus("pdfStatus", message, "error");
+      } finally {
+        setBusy("pdfUploadBtn", false);
       }
     }
 
     async function loadResults() {
+      setBusy("loadResultsBtn", true);
+
       try {
         setStatus("resultsStatus", "Loading results...", "");
 
@@ -1463,6 +1603,8 @@ Identity rules:
       } catch (err) {
         const message = showError(err);
         setStatus("resultsStatus", message, "error");
+      } finally {
+        setBusy("loadResultsBtn", false);
       }
     }
 
@@ -1687,6 +1829,36 @@ Identity rules:
       return html;
     }
 
+    async function clearResultSheets() {
+      setBusy("clearResultsBtn", true);
+
+      try {
+        if (!confirm("Clear result sheets?")) {
+          return;
+        }
+
+        setStatus("resultsStatus", "Clearing result sheets...", "");
+
+        const result = await callBackend("clearResultSheets", {});
+
+        lastResultsData = null;
+
+        const resultsTables = document.getElementById("resultsTables");
+
+        if (resultsTables) {
+          resultsTables.innerHTML = "";
+        }
+
+        showOutput(result);
+        setStatus("resultsStatus", "Result sheets cleared.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("resultsStatus", "Clear results failed.", "error");
+      } finally {
+        setBusy("clearResultsBtn", false);
+      }
+    }
+
     function escapeHtml(value) {
       return String(value == null ? "" : value)
         .replace(/&/g, "&amp;")
@@ -1694,24 +1866,6 @@ Identity rules:
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-    }
-
-    async function clearResultSheets() {
-      try {
-        if (!confirm("Clear result sheets?")) {
-          return;
-        }
-
-        setStatus("resultsStatus", "Clearing result sheets...", "");
-        const result = await callBackend("clearResultSheets", {});
-        lastResultsData = null;
-        document.getElementById("resultsTables").innerHTML = "";
-        showOutput(result);
-        setStatus("resultsStatus", "Result sheets cleared.", "ok");
-      } catch (err) {
-        showError(err);
-        setStatus("resultsStatus", "Clear results failed.", "error");
-      }
     }
   </script>
 </body>
