@@ -7,8 +7,21 @@ export default async function handler(req, res) {
       return res.status(200).json({
         ok: true,
         route: "/api/learning-tools",
-        message: "Vercel API route is online. Small actions use GET bridge. PDF upload uses POST proxy.",
-        backendUrl: APPS_SCRIPT_BACKEND_URL
+        message: "Vercel API route is online. All app actions use POST proxy.",
+        backendUrl: APPS_SCRIPT_BACKEND_URL,
+        availablePostActions: [
+          "checkBackendConfig",
+          "processGradePdfUpload",
+          "generateArithmeticAssessmentPack",
+          "generateStoryAssessmentPack",
+          "generateStoryBenchmarkPack",
+          "generateStoryLearningMaterial",
+          "generateStoryFinalMeasurementPack",
+          "evaluateStoryProgress",
+          "getResultsData",
+          "clearResultSheets"
+        ],
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -29,11 +42,7 @@ export default async function handler(req, res) {
       });
     }
 
-    if (action === "processGradePdfUpload") {
-      return await forwardLargePdfPostToAppsScript_(res, requestBody);
-    }
-
-    return await forwardSmallActionViaGetBridge_(res, requestBody);
+    return await forwardPostToAppsScript_(res, requestBody);
 
   } catch (err) {
     return res.status(500).json({
@@ -44,50 +53,11 @@ export default async function handler(req, res) {
   }
 }
 
-async function forwardSmallActionViaGetBridge_(res, requestBody) {
-  const encodedRequest = Buffer
-    .from(JSON.stringify(requestBody), "utf8")
-    .toString("base64url");
-
-  const url =
-    APPS_SCRIPT_BACKEND_URL +
-    "?bridge=1&request=" +
-    encodeURIComponent(encodedRequest);
-
-  const appsScriptResponse = await fetch(url, {
-    method: "GET",
-    redirect: "follow"
+async function forwardPostToAppsScript_(res, requestBody) {
+  const sentBody = JSON.stringify({
+    action: String(requestBody.action || "").trim(),
+    payload: requestBody.payload || {}
   });
-
-  const rawText = await appsScriptResponse.text();
-
-  let data;
-
-  try {
-    data = JSON.parse(rawText);
-  } catch (err) {
-    return res.status(502).json({
-      ok: false,
-      error: [
-        "Apps Script returned non-JSON response through GET bridge.",
-        "",
-        "Status: " + appsScriptResponse.status,
-        "Final URL: " + appsScriptResponse.url,
-        "",
-        "Request action:",
-        String(requestBody.action || ""),
-        "",
-        "Raw response starts:",
-        rawText.substring(0, 3000)
-      ].join("\n")
-    });
-  }
-
-  return res.status(200).json(data);
-}
-
-async function forwardLargePdfPostToAppsScript_(res, requestBody) {
-  const sentBody = JSON.stringify(requestBody);
 
   const appsScriptResponse = await fetch(APPS_SCRIPT_BACKEND_URL, {
     method: "POST",
@@ -109,7 +79,7 @@ async function forwardLargePdfPostToAppsScript_(res, requestBody) {
     return res.status(502).json({
       ok: false,
       error: [
-        "Apps Script returned non-JSON response through PDF POST proxy.",
+        "Apps Script returned non-JSON response through POST proxy.",
         "",
         "Status: " + appsScriptResponse.status,
         "Content-Type: " + contentType,
@@ -134,6 +104,17 @@ async function forwardLargePdfPostToAppsScript_(res, requestBody) {
       appsScriptContentType: contentType,
       appsScriptFinalUrl: appsScriptResponse.url,
       rawResponseStart: rawText.substring(0, 3000)
+    });
+  }
+
+  if (!appsScriptResponse.ok) {
+    return res.status(appsScriptResponse.status).json({
+      ok: false,
+      error: "Apps Script HTTP error.",
+      appsScriptStatus: appsScriptResponse.status,
+      appsScriptContentType: contentType,
+      appsScriptFinalUrl: appsScriptResponse.url,
+      result: data
     });
   }
 
