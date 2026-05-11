@@ -860,7 +860,7 @@ Identity rules:
           </div>
 
           <div class="pack-toolbar-right">
-            <button class="primary" onclick="window.print()">Print</button>
+            <button class="primary" onclick="printAllPages()">Print All Pages</button>
             <button id="answerKeyToggleBtn" class="secondary" onclick="toggleAnswerKey()">Show Answer Key</button>
             <button class="secondary" onclick="hidePackViewer()">Hide Cards</button>
           </div>
@@ -1579,6 +1579,80 @@ Identity rules:
 
       showPackAnswerKey = !showPackAnswerKey;
       renderAssessmentPack(currentPack);
+    }
+
+    function renderAllPackPagesForPrint() {
+      const container = document.getElementById("packPageContainer");
+
+      if (!container || !currentPack || !Array.isArray(currentPack.cards) || !currentPack.cards.length) {
+        return false;
+      }
+
+      container.innerHTML = "";
+
+      const totalPages = Math.ceil(currentPack.cards.length / CARDS_PER_PAGE);
+
+      for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+        const start = pageIndex * CARDS_PER_PAGE;
+        const pageCards = currentPack.cards.slice(start, start + CARDS_PER_PAGE);
+
+        const page = document.createElement("div");
+        page.className = "card-page";
+
+        const grid = document.createElement("div");
+        grid.className = "assessment-grid";
+
+        pageCards.forEach(function(card) {
+          grid.appendChild(buildAssessmentCardElement(card));
+        });
+
+        page.appendChild(grid);
+        container.appendChild(page);
+
+        if (showPackAnswerKey) {
+          container.appendChild(buildAnswerKeyElement(pageCards, pageIndex + 1, totalPages));
+        }
+      }
+
+      const viewer = document.getElementById("packViewer");
+      if (viewer) {
+        viewer.classList.remove("hidden");
+      }
+
+      const pageIndicator = document.getElementById("packPageIndicator");
+      if (pageIndicator) {
+        pageIndicator.textContent = "Print all pages, " + totalPages + " pages";
+      }
+
+      return true;
+    }
+
+    function printAllPages() {
+      if (!currentPack || !Array.isArray(currentPack.cards) || !currentPack.cards.length) {
+        showOutput({
+          message: "Generate an assessment first, then print."
+        });
+        return;
+      }
+
+      const pageBeforePrint = currentPackPage;
+      const printed = renderAllPackPagesForPrint();
+
+      if (!printed) {
+        return;
+      }
+
+      const restoreAfterPrint = function() {
+        window.removeEventListener("afterprint", restoreAfterPrint);
+        currentPackPage = pageBeforePrint;
+        renderAssessmentPack(currentPack);
+      };
+
+      window.addEventListener("afterprint", restoreAfterPrint);
+
+      setTimeout(function() {
+        window.print();
+      }, 100);
     }
 
     function hidePackViewer() {
