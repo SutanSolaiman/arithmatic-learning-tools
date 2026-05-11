@@ -330,7 +330,8 @@
       margin: 0 auto;
       background: #ffffff;
       border: 1px solid #d1d5db;
-      padding: 10mm;
+      padding: 8mm;
+      overflow: hidden;
     }
 
     .assessment-grid {
@@ -339,7 +340,8 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       width: 100%;
-      min-height: calc(297mm - 20mm);
+      height: calc(297mm - 16mm);
+      min-height: 0;
       gap: 0;
     }
 
@@ -350,8 +352,8 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      border-left: 2px dotted #9ca3af;
-      z-index: 5;
+      border-left: 1.5px dotted #6b7280;
+      z-index: 10;
       pointer-events: none;
     }
 
@@ -362,8 +364,8 @@
       right: 0;
       top: 50%;
       transform: translateY(-50%);
-      border-top: 2px dotted #9ca3af;
-      z-index: 5;
+      border-top: 1.5px dotted #6b7280;
+      z-index: 10;
       pointer-events: none;
     }
 
@@ -371,36 +373,37 @@
       position: relative;
       border: none;
       border-radius: 0;
-      padding: 10mm 8mm;
+      padding: 7mm 7mm;
+      width: 100%;
+      height: calc((297mm - 16mm) / 2);
       min-height: 0;
-      height: calc((297mm - 20mm) / 2);
       page-break-inside: avoid;
-      z-index: 2;
       overflow: hidden;
       box-sizing: border-box;
     }
 
     .assessment-card-title {
       font-weight: 700;
-      font-size: 18px;
+      font-size: 14px;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 7px;
       text-transform: uppercase;
+      line-height: 1.2;
     }
 
     .assessment-card-header {
       display: grid;
-      gap: 10px;
-      margin-bottom: 14px;
-      font-size: 13px;
-      line-height: 1.35;
+      gap: 5px;
+      margin-bottom: 9px;
+      font-size: 9.5px;
+      line-height: 1.25;
     }
 
     .header-row {
       display: grid;
-      grid-template-columns: 88px 10px 1fr;
+      grid-template-columns: 58px 8px 1fr;
       align-items: center;
-      column-gap: 4px;
+      column-gap: 3px;
     }
 
     .header-label {
@@ -419,45 +422,55 @@
 
     .question-list {
       display: grid;
-      gap: 6px;
-      font-size: 13px;
-      line-height: 1.35;
+      gap: 4px;
+      font-size: 9.3px;
+      line-height: 1.24;
     }
 
     .question-row {
       display: grid;
-      grid-template-columns: 20px 1fr;
-      gap: 6px;
+      grid-template-columns: 16px 1fr;
+      gap: 5px;
       align-items: start;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .question-number {
       font-weight: 700;
-      font-size: 13px;
-      line-height: 1.35;
+      font-size: 9.3px;
+      line-height: 1.24;
     }
 
     .question-body {
       display: grid;
-      gap: 5px;
+      gap: 3px;
+      min-width: 0;
     }
 
     .question-text {
-      font-size: 13px;
-      line-height: 1.35;
+      font-size: 9.3px;
+      line-height: 1.24;
+      overflow-wrap: anywhere;
     }
 
-    .arithmetic-question-row,
+    .arithmetic-question-row {
+      margin-bottom: 5px;
+    }
+
     .story-question-row {
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .answer-line {
       border-bottom: 1px solid #111827;
-      height: 16px;
+      height: 9px;
       width: 100%;
-      margin-top: 4px;
+      margin-top: 1px;
+    }
+
+    .answer-key {
+      margin-top: 18px;
+      font-size: 13px;
     }
 
     .answer-key-panel {
@@ -499,11 +512,13 @@
         width: 100%;
         min-height: auto;
         padding: 12px;
+        overflow: visible;
       }
 
       .assessment-grid {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
+        height: auto;
         min-height: auto;
       }
 
@@ -517,6 +532,7 @@
         min-height: 0;
         border-bottom: 1px dashed #d1d5db;
         padding: 16px 10px;
+        overflow: visible;
       }
     }
 
@@ -526,7 +542,10 @@
         margin: 0;
       }
 
+      html,
       body {
+        width: 210mm;
+        min-height: 297mm;
         background: #ffffff;
       }
 
@@ -544,6 +563,7 @@
 
       .main {
         padding: 0;
+        margin: 0;
       }
 
       .pack-viewer {
@@ -556,32 +576,40 @@
 
       .card-page {
         width: 210mm;
+        height: 297mm;
         min-height: 297mm;
         border: none;
         margin: 0;
-        padding: 10mm;
+        padding: 8mm;
         page-break-after: always;
+        break-after: page;
+        overflow: hidden;
       }
 
       .assessment-grid {
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr !important;
         width: 100%;
-        min-height: calc(297mm - 20mm);
+        height: calc(297mm - 16mm);
+        min-height: 0;
       }
 
       .assessment-grid::before {
         display: block !important;
-        border-left: 2px dotted #9ca3af;
+        border-left: 1.5px dotted #6b7280;
       }
 
       .assessment-grid::after {
         display: block !important;
-        border-top: 2px dotted #9ca3af;
+        border-top: 1.5px dotted #6b7280;
       }
 
       .assessment-card {
-        height: calc((297mm - 20mm) / 2);
+        width: 100%;
+        height: calc((297mm - 16mm) / 2);
         min-height: 0;
         border: none;
+        overflow: hidden;
       }
     }
   </style>
@@ -1396,8 +1424,8 @@ Identity rules:
       const header = document.createElement("div");
       header.className = "assessment-card-header";
       header.innerHTML =
-        "<div class='header-row'><span class='header-label'>Tanggal</span><span class='header-sep'>:</span><span class='header-line'>______________________________</span></div>" +
-        "<div class='header-row'><span class='header-label'>Nama</span><span class='header-sep'>:</span><span class='header-line'>______________________________</span></div>" +
+        "<div class='header-row'><span class='header-label'>Tanggal</span><span class='header-sep'>:</span><span class='header-line'>________________________</span></div>" +
+        "<div class='header-row'><span class='header-label'>Nama</span><span class='header-sep'>:</span><span class='header-line'>________________________</span></div>" +
         "<div class='header-row'><span class='header-label'>ID Karyawan</span><span class='header-sep'>:</span><span class='header-value'>" + escapeHtml(card && card.employeeId ? card.employeeId : "") + "</span></div>";
       wrapper.appendChild(header);
 
