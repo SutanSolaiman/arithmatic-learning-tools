@@ -1664,6 +1664,1690 @@ Identity rules:
         headers: headers,
         rows: rows
       };
+    }<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Tools</title>
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --code-bg: #111827;
+      --code-text: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      padding: 24px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo-img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: transparent;
+      display: block;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: white;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 10px;
+    }
+
+    .nav button {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    .main {
+      flex: 1;
+      padding: 28px;
+      overflow: auto;
+    }
+
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      background: white;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button.primary,
+    button.secondary,
+    button.danger {
+      padding: 11px 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    button.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    button.secondary {
+      background: #f3f4f6;
+      color: #111827;
+      border: 1px solid var(--border);
+    }
+
+    button.danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .status.ok {
+      color: var(--success);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .output-card {
+      margin-top: 20px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 12px;
+      min-height: 180px;
+      max-height: 360px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .pack-viewer {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .pack-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .pack-toolbar-left,
+    .pack-toolbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .page-indicator {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .card-page {
+      width: 100%;
+      max-width: 794px;
+      min-height: 1123px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      padding: 24px;
+    }
+
+    .assessment-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      gap: 0;
+      min-height: 1040px;
+    }
+
+    .assessment-grid::before,
+    .assessment-grid::after {
+      display: none;
+    }
+
+    .assessment-card {
+      position: relative;
+      border: none;
+      border-radius: 0;
+      padding: 24px;
+      min-height: 1040px;
+      page-break-inside: avoid;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .assessment-card-title {
+      font-weight: 700;
+      font-size: 22px;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .assessment-card-header {
+      display: grid;
+      gap: 34px;
+      margin-bottom: 34px;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .question-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 8px;
+      align-items: start;
+      margin-bottom: 20px;
+    }
+
+    .question-number {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .question-body {
+      display: grid;
+    }
+
+    .question-text {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .arithmetic-question-row,
+    .story-question-row {
+      margin-bottom: 20px;
+    }
+
+    .arithmetic-question-row .question-body,
+    .story-question-row .question-body {
+      gap: 8px;
+    }
+
+    .answer-line {
+      border-bottom: 1px solid #111827;
+      height: 24px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .answer-key {
+      margin-top: 18px;
+      font-size: 13px;
+    }
+
+    .answer-key-panel {
+      width: 100%;
+      max-width: 794px;
+      margin: 16px auto 0;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .answer-key-panel h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assessment-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      .assessment-card {
+        min-height: 1040px;
+      }
+
+      .card-page {
+        min-height: 1123px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .assessment-grid::before,
+      .assessment-grid::after {
+        display: none !important;
+      }
+
+      .assessment-card {
+        border: none;
+        min-height: 260mm;
+      }
+
+      .sidebar,
+      .header,
+      .page-section,
+      .output-card,
+      .pack-toolbar {
+        display: none !important;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .main {
+        padding: 0;
+      }
+
+      .pack-viewer {
+        display: block !important;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .card-page {
+        border: none;
+        max-width: none;
+        min-height: auto;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <img
+          src="/assets/dr-logo.png"
+          alt="DR Logo"
+          class="brand-logo-img"
+          onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='flex';"
+        />
+
+        <div id="fallbackLogo" class="brand-logo">DR</div>
+
+        <div>
+          <p class="brand-title">Learning Tools</p>
+          <p class="brand-subtitle">Arithmetic, Story, PDF Grading</p>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="active" onclick="showSection('dashboard', this)">Dashboard</button>
+        <button onclick="showSection('arithmetic', this)">Arithmetic Generator</button>
+        <button onclick="showSection('story', this)">Story Generator</button>
+        <button onclick="showSection('pdf', this)">PDF Grading</button>
+        <button onclick="showSection('results', this)">Results</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="header">
+        <h1>Learning Tools</h1>
+        <p>Generate printable assessment cards with pagination, answer key, PDF grading, and results view.</p>
+      </section>
+
+      <section id="dashboard" class="page-section">
+        <div class="grid">
+          <div class="card">
+            <h2>Backend Check</h2>
+            <p class="status">This tests the Vercel API proxy to Apps Script.</p>
+
+            <div class="button-row">
+              <button id="backendCheckBtn" class="primary" onclick="runBackendCheck()">Check Backend Config</button>
+              <button id="pingBtn" class="secondary" onclick="runPing()">Ping Backend</button>
+            </div>
+
+            <p id="dashboardStatus" class="status"></p>
+          </div>
+
+          <div class="card">
+            <h2>Quick Test</h2>
+            <p class="status">Use these after backend check passes.</p>
+
+            <div class="button-row">
+              <button class="primary" onclick="runArithmeticTest()">Arithmetic Test</button>
+              <button class="primary" onclick="runStoryTest()">Story Test</button>
+              <button class="secondary" onclick="loadResults()">Load Results</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="arithmetic" class="page-section hidden">
+        <div class="card">
+          <h2>Arithmetic Generator</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="arithTitle">Title</label>
+              <input id="arithTitle" value="Applied Quantitative Learning Program" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithPrefix">Employee ID Prefix</label>
+              <input id="arithPrefix" value="EMP" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithEmployees">Total Employees</label>
+              <input id="arithEmployees" type="number" value="2" min="1" max="1000" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithDays">Total Days</label>
+              <input id="arithDays" type="number" value="2" min="1" max="365" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithDayNumbers">Day Numbers</label>
+              <input id="arithDayNumbers" value="1,2" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithDifficulty">Difficulty</label>
+              <input id="arithDifficulty" type="number" value="3" min="1" max="5" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithDigits">Z Digits</label>
+              <input id="arithDigits" type="number" value="3" min="2" max="6" />
+            </div>
+
+            <div class="form-group">
+              <label for="arithOperation">Operation Mode</label>
+              <select id="arithOperation">
+                <option value="mix">Mix</option>
+                <option value="mul">Multiplication</option>
+                <option value="div">Division</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="arithGenerateBtn" class="primary" onclick="generateArithmetic()">Generate Arithmetic</button>
+          </div>
+
+          <p id="arithStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section id="story" class="page-section hidden">
+        <div class="card">
+          <h2>Story Generator</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="storyTitle">Title</label>
+              <input id="storyTitle" value="Asesmen Cerita Kuantitatif" />
+            </div>
+
+            <div class="form-group">
+              <label for="storyPrefix">Employee ID Prefix</label>
+              <input id="storyPrefix" value="EMP" />
+            </div>
+
+            <div class="form-group">
+              <label for="storyEmployees">Total Employees</label>
+              <input id="storyEmployees" type="number" value="2" min="1" max="50" />
+            </div>
+
+            <div class="form-group">
+              <label for="storyDays">Total Days</label>
+              <input id="storyDays" type="number" value="2" min="1" max="75" />
+            </div>
+
+            <div class="form-group">
+              <label for="storyDayNumbers">Day Numbers</label>
+              <input id="storyDayNumbers" value="1,2" />
+            </div>
+
+            <div class="form-group">
+              <label for="storyDifficulty">Difficulty</label>
+              <input id="storyDifficulty" type="number" value="3" min="1" max="5" />
+            </div>
+
+            <div class="form-group full">
+              <label for="storyContext">Learning Context</label>
+              <textarea id="storyContext">PERCETAKAN</textarea>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="storyGenerateBtn" class="primary" onclick="generateStory()">Generate Story</button>
+            <button id="storyBenchmarkBtn" class="secondary" onclick="generateStoryBenchmark()">Benchmark Pack</button>
+            <button id="storyFinalBtn" class="secondary" onclick="generateStoryFinal()">Final Measurement</button>
+          </div>
+
+          <p id="storyStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section id="pdf" class="page-section hidden">
+        <div class="card">
+          <h2>PDF Grading</h2>
+
+          <div class="form-group">
+            <label for="pdfFile">PDF File</label>
+            <input id="pdfFile" type="file" accept="application/pdf,.pdf" onchange="rememberSelectedPdfFile(this)" />
+          </div>
+
+          <div class="form-group">
+            <label for="pdfInstruction">Optional Instruction</label>
+            <textarea id="pdfInstruction" placeholder="Optional grading instruction">Extract Hari, Tanggal, Nama, ID Karyawan, and Nilai from every visible assessment card.
+
+Grade each card on a 0 to 10 scale.
+
+For arithmetic cards:
+- There are usually 10 questions.
+- Each correct answer is worth 1 point.
+- Blank, unreadable, or wrong answers count as incorrect.
+
+For story cards:
+- There are usually 5 story questions.
+- Grade each question fairly based on the final answer and reasoning.
+- Convert the total result to a 0 to 10 score.
+
+Identity rules:
+- Extract Nama from the line "Nama:".
+- Extract ID Karyawan from the line "ID Karyawan:".
+- Extract Tanggal from the line "Tanggal:".
+- If Nama is unreadable, assign Karyawan 1, Karyawan 2, and so on in page order.
+- If Tanggal is missing or unreadable, use today's date.
+- Return one row per participant card.</textarea>
+          </div>
+
+          <div class="button-row">
+            <button id="pdfUploadBtn" class="primary" onclick="uploadPdfForGrading()">Upload and Grade PDF</button>
+          </div>
+
+          <p id="pdfStatus" class="status"></p>
+        </div>
+      </section>
+
+      <section id="results" class="page-section hidden">
+        <div class="card">
+          <h2>Results</h2>
+
+          <div class="button-row">
+            <button id="loadResultsBtn" class="primary" onclick="loadResults()">Load Results</button>
+            <button class="secondary" onclick="downloadResultsXls()">Download XLS</button>
+            <button id="clearResultsBtn" class="danger" onclick="clearResultSheets()">Clear Result Sheets</button>
+          </div>
+
+          <p id="resultsStatus" class="status"></p>
+
+          <div id="resultsTables"></div>
+        </div>
+      </section>
+
+      <section class="card output-card hidden">
+        <h2>Output Summary</h2>
+        <div class="button-row">
+          <button class="secondary" onclick="clearOutput()">Clear Output</button>
+        </div>
+        <pre id="output">Ready.</pre>
+      </section>
+
+      <section id="packViewer" class="pack-viewer hidden">
+        <div class="pack-toolbar">
+          <div class="pack-toolbar-left">
+            <button class="secondary" onclick="previousPackPage()">Previous</button>
+            <button class="secondary" onclick="nextPackPage()">Next</button>
+            <span id="packPageIndicator" class="page-indicator"></span>
+          </div>
+
+          <div class="pack-toolbar-right">
+            <button class="primary" onclick="window.print()">Print</button>
+            <button id="answerKeyToggleBtn" class="secondary" onclick="toggleAnswerKey()">Show Answer Key</button>
+            <button class="secondary" onclick="hidePackViewer()">Hide Cards</button>
+          </div>
+        </div>
+
+        <div id="packPageContainer"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let lastResultsData = null;
+    let currentPack = null;
+    let currentPackPage = 0;
+    let showPackAnswerKey = false;
+    let selectedPdfFile = null;
+
+    const CARDS_PER_PAGE = 1;
+    const DAILY_GRADE_SHEET_NAME = "Nilai_Harian";
+    const SUMMARY_SHEET_NAME = "Summary";
+
+    async function callBackend(action, payload) {
+      const normalizedPayload = payload || {};
+
+      const response = await fetch("/api/learning-tools", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          action: action,
+          payload: normalizedPayload,
+          args: [normalizedPayload]
+        })
+      });
+
+      const rawText = await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(rawText);
+      } catch (err) {
+        throw new Error(
+          "Vercel API returned non-JSON response. HTTP " +
+          response.status +
+          ". Raw response starts with:\n" +
+          rawText.substring(0, 3000)
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.rawResponseStart ||
+          data.error ||
+          data.message ||
+          "HTTP " + response.status
+        );
+      }
+
+      if (!data.ok) {
+        throw new Error(
+          data.rawResponseStart ||
+          data.error ||
+          data.message ||
+          "Backend returned ok=false."
+        );
+      }
+
+      return typeof data.result !== "undefined" ? data.result : data;
+    }
+
+    function showSection(id, button) {
+      document.querySelectorAll(".page-section").forEach(function(section) {
+        section.classList.add("hidden");
+      });
+
+      const target = document.getElementById(id);
+
+      if (target) {
+        target.classList.remove("hidden");
+      }
+
+      document.querySelectorAll(".nav button").forEach(function(btn) {
+        btn.classList.remove("active");
+      });
+
+      if (button) {
+        button.classList.add("active");
+      }
+    }
+
+    function setStatus(id, message, type) {
+      const el = document.getElementById(id);
+
+      if (!el) {
+        return;
+      }
+
+      el.textContent = message || "";
+      el.className = "status" + (type ? " " + type : "");
+    }
+
+    function setBusy(id, busy) {
+      const el = document.getElementById(id);
+
+      if (el) {
+        el.disabled = Boolean(busy);
+      }
+    }
+
+    function showOutput(data) {
+      const output = document.getElementById("output");
+      const outputCard = document.querySelector(".output-card");
+
+      if (outputCard) {
+        outputCard.classList.remove("hidden");
+      }
+
+      if (!output) {
+        return;
+      }
+
+      if (data && typeof data === "object" && data.html) {
+        output.innerHTML = data.html;
+        return;
+      }
+
+      output.textContent =
+        typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    function showError(err) {
+      const message = "Error: " + (err && err.message ? err.message : String(err));
+      const output = document.getElementById("output");
+      const outputCard = document.querySelector(".output-card");
+
+      if (outputCard) {
+        outputCard.classList.remove("hidden");
+      }
+
+      if (output) {
+        output.textContent = message;
+      }
+
+      return message;
+    }
+
+    function clearOutput() {
+      const output = document.getElementById("output");
+
+      if (output) {
+        output.textContent = "Ready.";
+      }
+    }
+
+    function numberValue(id, fallback) {
+      const el = document.getElementById(id);
+      const n = Number(el && el.value);
+
+      return isNaN(n) ? fallback : n;
+    }
+
+    async function runPing() {
+      setBusy("pingBtn", true);
+
+      try {
+        setStatus("dashboardStatus", "Pinging backend...", "");
+
+        const result = await callBackend("ping", {});
+
+        showOutput(result);
+        setStatus("dashboardStatus", "Backend ping OK.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("dashboardStatus", "Backend ping failed.", "error");
+      } finally {
+        setBusy("pingBtn", false);
+      }
+    }
+
+    async function runBackendCheck() {
+      setBusy("backendCheckBtn", true);
+
+      try {
+        setStatus("dashboardStatus", "Checking backend config...", "");
+
+        const result = await callBackend("checkBackendConfig", {});
+
+        showOutput({
+          status: "Backend online",
+          app: result && result.app ? result.app : "Learning Tools",
+          mode: result && result.mode ? result.mode : "",
+          message: result && result.message ? result.message : "",
+          availableGetTests: result && result.availableGetTests ? result.availableGetTests : [],
+          availablePostActions: result && result.availablePostActions ? result.availablePostActions : [],
+          timestamp: result && result.timestamp ? result.timestamp : ""
+        });
+
+        setStatus(
+          "dashboardStatus",
+          "Backend config OK. Use the buttons for POST app actions.",
+          "ok"
+        );
+      } catch (err) {
+        showError(err);
+        setStatus("dashboardStatus", "Backend config failed.", "error");
+      } finally {
+        setBusy("backendCheckBtn", false);
+      }
+    }
+
+    function getArithmeticPayload() {
+      return {
+        title: document.getElementById("arithTitle").value,
+        employeeIdPrefix: document.getElementById("arithPrefix").value,
+        totalEmployees: numberValue("arithEmployees", 2),
+        totalDays: numberValue("arithDays", 2),
+        dayNumbers: document.getElementById("arithDayNumbers").value,
+        difficulty: numberValue("arithDifficulty", 3),
+        zDigits: numberValue("arithDigits", 3),
+        operationMode: document.getElementById("arithOperation").value
+      };
+    }
+
+    async function generateArithmetic() {
+      setBusy("arithGenerateBtn", true);
+
+      try {
+        setStatus("arithStatus", "Generating arithmetic assessment...", "");
+
+        const result = await callBackend(
+          "generateArithmeticAssessmentPack",
+          getArithmeticPayload()
+        );
+
+        const pack = normalizeAssessmentPack(result);
+
+        currentPack = pack;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(pack);
+
+        showOutput({
+          message: "Arithmetic assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
+
+        setStatus("arithStatus", "Arithmetic assessment generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("arithStatus", "Arithmetic generation failed.", "error");
+      } finally {
+        setBusy("arithGenerateBtn", false);
+      }
+    }
+
+    async function runArithmeticTest() {
+      try {
+        const result = await callBackend("generateArithmeticAssessmentPack", {
+          title: "Applied Quantitative Learning Program",
+          employeeIdPrefix: "EMP",
+          totalEmployees: 2,
+          totalDays: 2,
+          dayNumbers: "1,2",
+          difficulty: 3,
+          zDigits: 3,
+          operationMode: "mix"
+        });
+
+        const pack = normalizeAssessmentPack(result);
+
+        currentPack = pack;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(pack);
+
+        showOutput({
+          message: "Arithmetic assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
+      } catch (err) {
+        showError(err);
+      }
+    }
+
+    function normalizeAssessmentPack(pack) {
+      if (!pack) {
+        return null;
+      }
+
+      if (pack.result && pack.result.cards) {
+        return pack.result;
+      }
+
+      if (pack.pack && pack.pack.cards) {
+        return pack.pack;
+      }
+
+      if (pack.data && pack.data.cards) {
+        return pack.data;
+      }
+
+      if (pack.cards) {
+        return pack;
+      }
+
+      return pack;
+    }
+
+    function getStoryPayload() {
+      return {
+        title: document.getElementById("storyTitle").value,
+        employeeIdPrefix: document.getElementById("storyPrefix").value,
+        totalEmployees: numberValue("storyEmployees", 2),
+        totalDays: numberValue("storyDays", 2),
+        dayNumbers: document.getElementById("storyDayNumbers").value,
+        difficulty: numberValue("storyDifficulty", 3),
+        learningContext: document.getElementById("storyContext").value,
+        language: "id",
+        outputLanguage: "Bahasa Indonesia"
+      };
+    }
+
+    async function generateStory() {
+      setBusy("storyGenerateBtn", true);
+
+      try {
+        setStatus("storyStatus", "Generating story assessment...", "");
+
+        const result = await callBackend(
+          "generateStoryAssessmentPack",
+          getStoryPayload()
+        );
+
+        const pack = normalizeAssessmentPack(result);
+
+        currentPack = pack;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(pack);
+
+        showOutput({
+          message: "Story assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
+
+        setStatus("storyStatus", "Story assessment generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("storyStatus", "Story generation failed.", "error");
+      } finally {
+        setBusy("storyGenerateBtn", false);
+      }
+    }
+
+    async function generateStoryBenchmark() {
+      setBusy("storyBenchmarkBtn", true);
+
+      try {
+        setStatus("storyStatus", "Generating story benchmark...", "");
+
+        const result = await callBackend(
+          "generateStoryBenchmarkPack",
+          getStoryPayload()
+        );
+
+        const pack = normalizeAssessmentPack(result);
+
+        currentPack = pack;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(pack);
+
+        showOutput({
+          message: "Story benchmark generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
+
+        setStatus("storyStatus", "Story benchmark generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("storyStatus", "Story benchmark failed.", "error");
+      } finally {
+        setBusy("storyBenchmarkBtn", false);
+      }
+    }
+
+    async function generateStoryFinal() {
+      setBusy("storyFinalBtn", true);
+
+      try {
+        setStatus("storyStatus", "Generating final measurement...", "");
+
+        const result = await callBackend("generateStoryFinalMeasurementPack", {
+          config: getStoryPayload(),
+          benchmarkResult: {
+            overallScore: 60,
+            notes: "",
+            skills: {
+              reading_comprehension: 60,
+              data_identification: 60,
+              operation_selection: 60,
+              multiplication_accuracy: 60,
+              division_accuracy: 60,
+              rounding_capacity_logic: 60,
+              multi_step_reasoning: 60
+            }
+          }
+        });
+
+        const pack = normalizeAssessmentPack(result);
+
+        currentPack = pack;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(pack);
+
+        showOutput({
+          message: "Final measurement generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
+
+        setStatus("storyStatus", "Final measurement generated.", "ok");
+      } catch (err) {
+        showError(err);
+        setStatus("storyStatus", "Final measurement failed.", "error");
+      } finally {
+        setBusy("storyFinalBtn", false);
+      }
+    }
+
+    async function runStoryTest() {
+      try {
+        const result = await callBackend("generateStoryAssessmentPack", {
+          title: "Asesmen Cerita Kuantitatif",
+          employeeIdPrefix: "EMP",
+          totalEmployees: 2,
+          totalDays: 2,
+          dayNumbers: "1,2",
+          difficulty: 3,
+          learningContext: "PERCETAKAN",
+          language: "id",
+          outputLanguage: "Bahasa Indonesia"
+        });
+
+        const pack = normalizeAssessmentPack(result);
+
+        currentPack = pack;
+        currentPackPage = 0;
+        showPackAnswerKey = false;
+
+        renderAssessmentPack(pack);
+
+        showOutput({
+          message: "Story assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
+      } catch (err) {
+        showError(err);
+      }
+    }
+
+    function renderAssessmentPack(pack) {
+      const viewer = document.getElementById("packViewer");
+      const container = document.getElementById("packPageContainer");
+      const toggleBtn = document.getElementById("answerKeyToggleBtn");
+
+      if (!viewer || !container) {
+        return;
+      }
+
+      if (!pack || !pack.cards || !pack.cards.length) {
+        viewer.classList.add("hidden");
+        container.innerHTML = "";
+
+        if (toggleBtn) {
+          toggleBtn.textContent = "Show Answer Key";
+        }
+
+        return;
+      }
+
+      viewer.classList.remove("hidden");
+
+      const totalPages = Math.ceil(pack.cards.length / CARDS_PER_PAGE);
+
+      if (currentPackPage < 0) {
+        currentPackPage = 0;
+      }
+
+      if (currentPackPage >= totalPages) {
+        currentPackPage = totalPages - 1;
+      }
+
+      const start = currentPackPage * CARDS_PER_PAGE;
+      const pageCards = pack.cards.slice(start, start + CARDS_PER_PAGE);
+
+      const pageIndicator = document.getElementById("packPageIndicator");
+
+      if (pageIndicator) {
+        pageIndicator.textContent = "Page " + (currentPackPage + 1) + " of " + totalPages;
+      }
+
+      if (toggleBtn) {
+        toggleBtn.textContent = showPackAnswerKey ? "Hide Answer Key" : "Show Answer Key";
+      }
+
+      container.innerHTML = "";
+
+      const page = document.createElement("div");
+      page.className = "card-page";
+
+      const grid = document.createElement("div");
+      grid.className = "assessment-grid";
+
+      pageCards.forEach(function(card) {
+        grid.appendChild(buildAssessmentCardElement(card));
+      });
+
+      page.appendChild(grid);
+      container.appendChild(page);
+
+      if (showPackAnswerKey) {
+        container.appendChild(buildAnswerKeyElement(pageCards, currentPackPage + 1, totalPages));
+      }
+    }
+
+    function buildAssessmentCardElement(card) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "assessment-card";
+
+      const title = document.createElement("div");
+      title.className = "assessment-card-title";
+      title.textContent = formatDayLabel(card);
+      wrapper.appendChild(title);
+
+      const header = document.createElement("div");
+      header.className = "assessment-card-header";
+      header.innerHTML =
+        "<div>Tanggal: ________________________________</div>" +
+        "<div>Nama: ________________________________</div>" +
+        "<div>ID Karyawan: " + escapeHtml(card && card.employeeId ? card.employeeId : "") + "</div>";
+      wrapper.appendChild(header);
+
+      const list = document.createElement("div");
+      list.className = "question-list";
+
+      const items = card && Array.isArray(card.items) ? card.items : [];
+
+      const isStoryCard = items.some(function(item) {
+        return Boolean(item.question) && !Boolean(item.text);
+      });
+
+      items.forEach(function(item, index) {
+        const row = document.createElement("div");
+        row.className = isStoryCard
+          ? "question-row story-question-row"
+          : "question-row arithmetic-question-row";
+
+        const no = document.createElement("div");
+        no.className = "question-number";
+        no.textContent = String(item.no || index + 1) + ".";
+
+        const body = document.createElement("div");
+        body.className = "question-body";
+
+        const text = document.createElement("div");
+        text.className = "question-text";
+        text.textContent = item.text || item.question || "";
+        body.appendChild(text);
+
+        const answerLine = document.createElement("div");
+        answerLine.className = "answer-line";
+        body.appendChild(answerLine);
+
+        row.appendChild(no);
+        row.appendChild(body);
+        list.appendChild(row);
+      });
+
+      wrapper.appendChild(list);
+      return wrapper;
+    }
+
+    function formatDayLabel(card) {
+      if (!card) {
+        return "HARI";
+      }
+
+      if (card.dayNumber) {
+        return "HARI " + Number(card.dayNumber);
+      }
+
+      const raw = String(card.dayLabel || "").trim();
+
+      if (!raw) {
+        return "HARI";
+      }
+
+      const match = raw.match(/\d+/);
+
+      if (match) {
+        return "HARI " + Number(match[0]);
+      }
+
+      return raw.toUpperCase();
+    }
+
+    function buildAnswerKeyElement(pageCards, pageNumber, totalPages) {
+      const box = document.createElement("div");
+      box.className = "answer-key answer-key-panel";
+
+      const title = document.createElement("h3");
+      title.textContent = "Answer Key, Page " + pageNumber + " of " + totalPages;
+      box.appendChild(title);
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+
+      ["Day", "Employee ID", "Answers"].forEach(function(header) {
+        const th = document.createElement("th");
+        th.textContent = header;
+        headRow.appendChild(th);
+      });
+
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      pageCards.forEach(function(card) {
+        const tr = document.createElement("tr");
+
+        const day = document.createElement("td");
+        day.textContent = formatDayLabel(card);
+
+        const employee = document.createElement("td");
+        employee.textContent = card && card.employeeId ? card.employeeId : "";
+
+        const answers = document.createElement("td");
+        answers.textContent = (card && card.items ? card.items : [])
+          .map(function(item, index) {
+            return (item.no || index + 1) + ". " + (item.answer || "");
+          })
+          .join(", ");
+
+        tr.appendChild(day);
+        tr.appendChild(employee);
+        tr.appendChild(answers);
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      box.appendChild(table);
+
+      return box;
+    }
+
+    function nextPackPage() {
+      if (!currentPack || !currentPack.cards) {
+        return;
+      }
+
+      const totalPages = Math.ceil(currentPack.cards.length / CARDS_PER_PAGE);
+
+      if (currentPackPage < totalPages - 1) {
+        currentPackPage++;
+        renderAssessmentPack(currentPack);
+      }
+    }
+
+    function previousPackPage() {
+      if (!currentPack || !currentPack.cards) {
+        return;
+      }
+
+      if (currentPackPage > 0) {
+        currentPackPage--;
+        renderAssessmentPack(currentPack);
+      }
+    }
+
+    function toggleAnswerKey() {
+      if (!currentPack || !currentPack.cards || !currentPack.cards.length) {
+        showOutput({
+          message: "Generate an assessment first, then show the answer key."
+        });
+        return;
+      }
+
+      showPackAnswerKey = !showPackAnswerKey;
+      renderAssessmentPack(currentPack);
+    }
+
+    function hidePackViewer() {
+      const viewer = document.getElementById("packViewer");
+
+      if (viewer) {
+        viewer.classList.add("hidden");
+      }
+    }
+
+    function rememberSelectedPdfFile(input) {
+      selectedPdfFile =
+        input && input.files && input.files.length
+          ? input.files[0]
+          : null;
+
+      if (selectedPdfFile) {
+        setStatus("pdfStatus", "Selected PDF: " + selectedPdfFile.name, "ok");
+      } else {
+        setStatus("pdfStatus", "No PDF selected.", "error");
+      }
+    }
+
+    function getSelectedPdfFile() {
+      const input = document.getElementById("pdfFile");
+
+      if (input && input.files && input.files.length) {
+        selectedPdfFile = input.files[0];
+        return selectedPdfFile;
+      }
+
+      return selectedPdfFile;
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise(function(resolve, reject) {
+        if (!file) {
+          reject(new Error("Please select a PDF file."));
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function() {
+          resolve(String(reader.result || ""));
+        };
+
+        reader.onerror = function() {
+          reject(reader.error || new Error("Failed to read file."));
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadPdfForGrading() {
+      setBusy("pdfUploadBtn", true);
+
+      try {
+        const file = getSelectedPdfFile();
+
+        if (!file) {
+          throw new Error("Please select a PDF file.");
+        }
+
+        const fileName = String(file.name || "");
+
+        if (!/\.pdf$/i.test(fileName) && file.type !== "application/pdf") {
+          throw new Error("The selected file must be a PDF.");
+        }
+
+        setStatus("pdfStatus", "Reading PDF: " + fileName, "");
+
+        const base64Data = await readFileAsBase64(file);
+
+        if (!base64Data || base64Data.length < 100) {
+          throw new Error("PDF could not be read as base64 data.");
+        }
+
+        const instructionEl = document.getElementById("pdfInstruction");
+
+        setStatus("pdfStatus", "Uploading and grading PDF...", "");
+
+        const result = await callBackend("processGradePdfUpload", {
+          base64Data: base64Data,
+          fileName: fileName,
+          optionalInstruction: instructionEl ? instructionEl.value : ""
+        });
+
+        showOutput(result);
+
+        if (result && result.html) {
+          const resultsBox = document.getElementById("resultsTables");
+
+          if (resultsBox) {
+            resultsBox.innerHTML = result.html;
+          }
+        }
+
+        setStatus("pdfStatus", "PDF grading completed.", "ok");
+      } catch (err) {
+        const message = showError(err);
+        setStatus("pdfStatus", message, "error");
+      } finally {
+        setBusy("pdfUploadBtn", false);
+      }
+    }
+
+    async function loadResults() {
+      setBusy("loadResultsBtn", true);
+
+      try {
+        setStatus("resultsStatus", "Loading results...", "");
+
+        const result = await callBackend("getResultsData", {});
+
+        lastResultsData = normalizeResultsData(result);
+
+        showOutput(lastResultsData);
+        renderResultsTables(lastResultsData);
+
+        setStatus("resultsStatus", "Results loaded.", "ok");
+      } catch (err) {
+        const message = showError(err);
+        setStatus("resultsStatus", message, "error");
+      } finally {
+        setBusy("loadResultsBtn", false);
+      }
+    }
+
+    function normalizeResultsData(data) {
+      data = data || {};
+
+      if (data.detail && data.summary) {
+        return data;
+      }
+
+      const detailRows = Array.isArray(data.rows) ? data.rows : [];
+      const summaryRows = Array.isArray(data.summaryRows) ? data.summaryRows : [];
+
+      return {
+        detail: objectsToTableData_SYS_UI(
+          data.detailSheet || DAILY_GRADE_SHEET_NAME || "Nilai_Harian",
+          detailRows
+        ),
+        summary: objectsToTableData_SYS_UI(
+          data.summarySheet || SUMMARY_SHEET_NAME || "Summary",
+          summaryRows
+        ),
+        raw: data,
+        html: data.html || ""
+      };
+    }
+
+    function objectsToTableData_SYS_UI(sheetName, objects) {
+      objects = Array.isArray(objects) ? objects : [];
+
+      if (!objects.length) {
+        return {
+          sheetName: sheetName,
+          headers: [],
+          rows: []
+        };
+      }
+
+      const headers = [];
+
+      objects.forEach(function(obj) {
+        Object.keys(obj || {}).forEach(function(key) {
+          if (headers.indexOf(key) < 0) {
+            headers.push(key);
+          }
+        });
+      });
+
+      const rows = objects.map(function(obj) {
+        return headers.map(function(header) {
+          return obj && typeof obj[header] !== "undefined" ? obj[header] : "";
+        });
+      });
+
+      return {
+        sheetName: sheetName,
+        headers: headers,
+        rows: rows
+      };
     }
 
     function renderResultsTables(data) {
