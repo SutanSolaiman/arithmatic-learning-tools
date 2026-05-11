@@ -325,84 +325,139 @@
     }
 
     .card-page {
-      width: 100%;
-      max-width: 794px;
-      min-height: 1123px;
+      width: 210mm;
+      min-height: 297mm;
       margin: 0 auto;
       background: #ffffff;
       border: 1px solid #d1d5db;
-      padding: 24px;
+      padding: 10mm;
     }
 
     .assessment-grid {
+      position: relative;
       display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr;
-      min-height: 1040px;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      width: 100%;
+      min-height: calc(297mm - 20mm);
+      gap: 0;
+    }
+
+    .assessment-grid::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 2px dotted #9ca3af;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .assessment-grid::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 2px dotted #9ca3af;
+      z-index: 5;
+      pointer-events: none;
     }
 
     .assessment-card {
       position: relative;
       border: none;
       border-radius: 0;
-      padding: 24px;
-      min-height: 1040px;
+      padding: 10mm 8mm;
+      min-height: 0;
+      height: calc((297mm - 20mm) / 2);
       page-break-inside: avoid;
+      z-index: 2;
       overflow: hidden;
+      box-sizing: border-box;
     }
 
     .assessment-card-title {
       font-weight: 700;
-      font-size: 22px;
+      font-size: 18px;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       text-transform: uppercase;
     }
 
     .assessment-card-header {
       display: grid;
-      gap: 34px;
-      margin-bottom: 34px;
-      font-size: 16px;
-      line-height: 1.45;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .header-row {
+      display: grid;
+      grid-template-columns: 88px 10px 1fr;
+      align-items: center;
+      column-gap: 4px;
+    }
+
+    .header-label {
+      font-weight: 400;
+    }
+
+    .header-sep {
+      text-align: center;
+    }
+
+    .header-line,
+    .header-value {
+      display: block;
+      white-space: nowrap;
     }
 
     .question-list {
       display: grid;
-      gap: 12px;
-      font-size: 16px;
-      line-height: 1.7;
+      gap: 6px;
+      font-size: 13px;
+      line-height: 1.35;
     }
 
     .question-row {
       display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 8px;
+      grid-template-columns: 20px 1fr;
+      gap: 6px;
       align-items: start;
-      margin-bottom: 20px;
+      margin-bottom: 6px;
     }
 
     .question-number {
       font-weight: 700;
-      font-size: 16px;
-      line-height: 1.7;
+      font-size: 13px;
+      line-height: 1.35;
     }
 
     .question-body {
       display: grid;
-      gap: 8px;
+      gap: 5px;
     }
 
     .question-text {
-      font-size: 16px;
-      line-height: 1.7;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .arithmetic-question-row,
+    .story-question-row {
+      margin-bottom: 6px;
     }
 
     .answer-line {
       border-bottom: 1px solid #111827;
-      height: 24px;
+      height: 16px;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 4px;
     }
 
     .answer-key-panel {
@@ -413,7 +468,6 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px;
-      font-size: 13px;
     }
 
     .answer-key-panel h3 {
@@ -440,21 +494,40 @@
       .form-grid {
         grid-template-columns: 1fr;
       }
+
+      .card-page {
+        width: 100%;
+        min-height: auto;
+        padding: 12px;
+      }
+
+      .assessment-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        min-height: auto;
+      }
+
+      .assessment-grid::before,
+      .assessment-grid::after {
+        display: none;
+      }
+
+      .assessment-card {
+        height: auto;
+        min-height: 0;
+        border-bottom: 1px dashed #d1d5db;
+        padding: 16px 10px;
+      }
     }
 
     @media print {
       @page {
         size: A4 portrait;
-        margin: 8mm;
+        margin: 0;
       }
 
       body {
         background: #ffffff;
-      }
-
-      .assessment-card {
-        border: none;
-        min-height: 260mm;
       }
 
       .sidebar,
@@ -482,10 +555,33 @@
       }
 
       .card-page {
+        width: 210mm;
+        min-height: 297mm;
         border: none;
-        max-width: none;
-        min-height: auto;
+        margin: 0;
+        padding: 10mm;
         page-break-after: always;
+      }
+
+      .assessment-grid {
+        width: 100%;
+        min-height: calc(297mm - 20mm);
+      }
+
+      .assessment-grid::before {
+        display: block !important;
+        border-left: 2px dotted #9ca3af;
+      }
+
+      .assessment-grid::after {
+        display: block !important;
+        border-top: 2px dotted #9ca3af;
+      }
+
+      .assessment-card {
+        height: calc((297mm - 20mm) / 2);
+        min-height: 0;
+        border: none;
       }
     }
   </style>
@@ -501,7 +597,9 @@
           class="brand-logo-img"
           onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='flex';"
         />
+
         <div id="fallbackLogo" class="brand-logo">DR</div>
+
         <div>
           <p class="brand-title">Learning Tools</p>
           <p class="brand-subtitle">Arithmetic, Story, PDF Grading</p>
@@ -528,16 +626,19 @@
           <div class="card">
             <h2>Backend Check</h2>
             <p class="status">This tests the Vercel API proxy to Apps Script.</p>
+
             <div class="button-row">
               <button id="backendCheckBtn" class="primary" onclick="runBackendCheck()">Check Backend Config</button>
               <button id="pingBtn" class="secondary" onclick="runPing()">Ping Backend</button>
             </div>
+
             <p id="dashboardStatus" class="status"></p>
           </div>
 
           <div class="card">
             <h2>Quick Test</h2>
             <p class="status">Use these after backend check passes.</p>
+
             <div class="button-row">
               <button class="primary" onclick="runArithmeticTest()">Arithmetic Test</button>
               <button class="primary" onclick="runStoryTest()">Story Test</button>
@@ -709,6 +810,7 @@ Identity rules:
           </div>
 
           <p id="resultsStatus" class="status"></p>
+
           <div id="resultsTables"></div>
         </div>
       </section>
@@ -748,7 +850,7 @@ Identity rules:
     let showPackAnswerKey = false;
     let selectedPdfFile = null;
 
-    const CARDS_PER_PAGE = 1;
+    const CARDS_PER_PAGE = 4;
     const DAILY_GRADE_SHEET_NAME = "Nilai_Harian";
     const SUMMARY_SHEET_NAME = "Summary";
 
@@ -768,6 +870,7 @@ Identity rules:
       });
 
       const rawText = await response.text();
+
       let data;
 
       try {
@@ -790,7 +893,7 @@ Identity rules:
         );
       }
 
-      if (data && data.ok === false) {
+      if (!data.ok) {
         throw new Error(
           data.rawResponseStart ||
           data.error ||
@@ -799,134 +902,7 @@ Identity rules:
         );
       }
 
-      return unwrapBackendResponse(data);
-    }
-
-    function unwrapBackendResponse(value) {
-      let current = value;
-      let guard = 0;
-
-      while (guard < 20) {
-        guard++;
-
-        if (typeof current === "string") {
-          const trimmed = current.trim();
-
-          if (
-            (trimmed.charAt(0) === "{" && trimmed.charAt(trimmed.length - 1) === "}") ||
-            (trimmed.charAt(0) === "[" && trimmed.charAt(trimmed.length - 1) === "]")
-          ) {
-            try {
-              current = JSON.parse(trimmed);
-              continue;
-            } catch (err) {
-              return current;
-            }
-          }
-
-          return current;
-        }
-
-        if (!current || typeof current !== "object") {
-          return current;
-        }
-
-        if (current.ok === false) {
-          throw new Error(
-            current.rawResponseStart ||
-            current.error ||
-            current.message ||
-            "Backend returned ok=false."
-          );
-        }
-
-        if (current.cards && Array.isArray(current.cards)) {
-          return current;
-        }
-
-        if (current.detail || current.summary || current.rows || current.summaryRows || current.html) {
-          return current;
-        }
-
-        if (typeof current.result !== "undefined") {
-          current = current.result;
-          continue;
-        }
-
-        if (typeof current.data !== "undefined") {
-          current = current.data;
-          continue;
-        }
-
-        if (typeof current.pack !== "undefined") {
-          current = current.pack;
-          continue;
-        }
-
-        if (typeof current.body !== "undefined") {
-          current = current.body;
-          continue;
-        }
-
-        if (typeof current.response !== "undefined") {
-          current = current.response;
-          continue;
-        }
-
-        return current;
-      }
-
-      return current;
-    }
-
-    function normalizeAssessmentPack(value) {
-      const pack = unwrapBackendResponse(value);
-
-      if (!pack || typeof pack !== "object") {
-        throw new Error("Assessment pack is empty or invalid.");
-      }
-
-      if (!Array.isArray(pack.cards)) {
-        throw new Error(
-          "Assessment generated, but no cards array was found. Raw keys: " +
-          Object.keys(pack).join(", ")
-        );
-      }
-
-      if (!pack.meta || typeof pack.meta !== "object") {
-        pack.meta = {};
-      }
-
-      if (!Array.isArray(pack.answerKey)) {
-        pack.answerKey = pack.cards.map(function(card) {
-          return {
-            day: card.dayLabel || card.dayNumber || "",
-            employeeNo: card.employeeNo || "",
-            employeeId: card.employeeId || "",
-            answers: Array.isArray(card.items)
-              ? card.items.map(function(item) {
-                  return item.answer;
-                })
-              : []
-          };
-        });
-      }
-
-      return pack;
-    }
-
-    function buildPackSummary(message, pack) {
-      const safePack = normalizeAssessmentPack(pack);
-
-      return {
-        message: message,
-        generationMode: safePack.meta && safePack.meta.generationMode ? safePack.meta.generationMode : "",
-        totalCards: Array.isArray(safePack.cards) ? safePack.cards.length : 0,
-        totalAnswerKeys: Array.isArray(safePack.answerKey) ? safePack.answerKey.length : 0,
-        totalDays: safePack.meta && safePack.meta.totalDays ? safePack.meta.totalDays : "",
-        totalEmployees: safePack.meta && safePack.meta.totalEmployees ? safePack.meta.totalEmployees : "",
-        meta: safePack.meta
-      };
+      return typeof data.result !== "undefined" ? data.result : data;
     }
 
     function showSection(id, button) {
@@ -1046,7 +1022,15 @@ Identity rules:
 
         const result = await callBackend("checkBackendConfig", {});
 
-        showOutput(result);
+        showOutput({
+          status: "Backend online",
+          app: result && result.app ? result.app : "Learning Tools",
+          mode: result && result.mode ? result.mode : "",
+          message: result && result.message ? result.message : "",
+          availableGetTests: result && result.availableGetTests ? result.availableGetTests : [],
+          availablePostActions: result && result.availablePostActions ? result.availablePostActions : [],
+          timestamp: result && result.timestamp ? result.timestamp : ""
+        });
 
         setStatus(
           "dashboardStatus",
@@ -1093,13 +1077,15 @@ Identity rules:
 
         renderAssessmentPack(pack);
 
-        showOutput(buildPackSummary("Arithmetic assessment generated.", pack));
+        showOutput({
+          message: "Arithmetic assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
 
-        setStatus(
-          "arithStatus",
-          "Arithmetic assessment generated: " + pack.cards.length + " cards.",
-          "ok"
-        );
+        setStatus("arithStatus", "Arithmetic assessment generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("arithStatus", "Arithmetic generation failed.", "error");
@@ -1110,8 +1096,6 @@ Identity rules:
 
     async function runArithmeticTest() {
       try {
-        setStatus("dashboardStatus", "Generating arithmetic test...", "");
-
         const result = await callBackend("generateArithmeticAssessmentPack", {
           title: "Applied Quantitative Learning Program",
           employeeIdPrefix: "EMP",
@@ -1131,17 +1115,40 @@ Identity rules:
 
         renderAssessmentPack(pack);
 
-        showOutput(buildPackSummary("Arithmetic assessment generated.", pack));
-
-        setStatus(
-          "dashboardStatus",
-          "Arithmetic test generated: " + pack.cards.length + " cards.",
-          "ok"
-        );
+        showOutput({
+          message: "Arithmetic assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
       } catch (err) {
         showError(err);
-        setStatus("dashboardStatus", "Arithmetic test failed.", "error");
       }
+    }
+
+    function normalizeAssessmentPack(pack) {
+      if (!pack) {
+        return null;
+      }
+
+      if (pack.result && pack.result.cards) {
+        return pack.result;
+      }
+
+      if (pack.pack && pack.pack.cards) {
+        return pack.pack;
+      }
+
+      if (pack.data && pack.data.cards) {
+        return pack.data;
+      }
+
+      if (pack.cards) {
+        return pack;
+      }
+
+      return pack;
     }
 
     function getStoryPayload() {
@@ -1177,13 +1184,15 @@ Identity rules:
 
         renderAssessmentPack(pack);
 
-        showOutput(buildPackSummary("Story assessment generated.", pack));
+        showOutput({
+          message: "Story assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
 
-        setStatus(
-          "storyStatus",
-          "Story assessment generated: " + pack.cards.length + " cards.",
-          "ok"
-        );
+        setStatus("storyStatus", "Story assessment generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("storyStatus", "Story generation failed.", "error");
@@ -1211,13 +1220,15 @@ Identity rules:
 
         renderAssessmentPack(pack);
 
-        showOutput(buildPackSummary("Story benchmark generated.", pack));
+        showOutput({
+          message: "Story benchmark generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
 
-        setStatus(
-          "storyStatus",
-          "Story benchmark generated: " + pack.cards.length + " cards.",
-          "ok"
-        );
+        setStatus("storyStatus", "Story benchmark generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("storyStatus", "Story benchmark failed.", "error");
@@ -1257,13 +1268,15 @@ Identity rules:
 
         renderAssessmentPack(pack);
 
-        showOutput(buildPackSummary("Final measurement generated.", pack));
+        showOutput({
+          message: "Final measurement generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
 
-        setStatus(
-          "storyStatus",
-          "Final measurement generated: " + pack.cards.length + " cards.",
-          "ok"
-        );
+        setStatus("storyStatus", "Final measurement generated.", "ok");
       } catch (err) {
         showError(err);
         setStatus("storyStatus", "Final measurement failed.", "error");
@@ -1274,8 +1287,6 @@ Identity rules:
 
     async function runStoryTest() {
       try {
-        setStatus("dashboardStatus", "Generating story test...", "");
-
         const result = await callBackend("generateStoryAssessmentPack", {
           title: "Asesmen Cerita Kuantitatif",
           employeeIdPrefix: "EMP",
@@ -1296,16 +1307,15 @@ Identity rules:
 
         renderAssessmentPack(pack);
 
-        showOutput(buildPackSummary("Story assessment generated.", pack));
-
-        setStatus(
-          "dashboardStatus",
-          "Story test generated: " + pack.cards.length + " cards.",
-          "ok"
-        );
+        showOutput({
+          message: "Story assessment generated.",
+          generationMode: pack && pack.meta && pack.meta.generationMode,
+          totalCards: pack && pack.cards ? pack.cards.length : 0,
+          totalDays: pack && pack.meta && pack.meta.totalDays,
+          totalEmployees: pack && pack.meta && pack.meta.totalEmployees
+        });
       } catch (err) {
         showError(err);
-        setStatus("dashboardStatus", "Story test failed.", "error");
       }
     }
 
@@ -1318,7 +1328,7 @@ Identity rules:
         return;
       }
 
-      if (!pack || !Array.isArray(pack.cards) || !pack.cards.length) {
+      if (!pack || !pack.cards || !pack.cards.length) {
         viewer.classList.add("hidden");
         container.innerHTML = "";
 
@@ -1386,9 +1396,9 @@ Identity rules:
       const header = document.createElement("div");
       header.className = "assessment-card-header";
       header.innerHTML =
-        "<div>Tanggal: ________________________________</div>" +
-        "<div>Nama: ________________________________</div>" +
-        "<div>ID Karyawan: " + escapeHtml(card && card.employeeId ? card.employeeId : "") + "</div>";
+        "<div class='header-row'><span class='header-label'>Tanggal</span><span class='header-sep'>:</span><span class='header-line'>______________________________</span></div>" +
+        "<div class='header-row'><span class='header-label'>Nama</span><span class='header-sep'>:</span><span class='header-line'>______________________________</span></div>" +
+        "<div class='header-row'><span class='header-label'>ID Karyawan</span><span class='header-sep'>:</span><span class='header-value'>" + escapeHtml(card && card.employeeId ? card.employeeId : "") + "</span></div>";
       wrapper.appendChild(header);
 
       const list = document.createElement("div");
@@ -1396,13 +1406,12 @@ Identity rules:
 
       const items = card && Array.isArray(card.items) ? card.items : [];
 
-      const isStoryCard = items.some(function(item) {
-        return Boolean(item.question) && !Boolean(item.text);
-      });
-
       items.forEach(function(item, index) {
+        const isStoryQuestion = Boolean(item.question) && !Boolean(item.text);
+        const isArithmeticQuestion = Boolean(item.text);
+
         const row = document.createElement("div");
-        row.className = isStoryCard
+        row.className = isStoryQuestion
           ? "question-row story-question-row"
           : "question-row arithmetic-question-row";
 
@@ -1418,9 +1427,11 @@ Identity rules:
         text.textContent = item.text || item.question || "";
         body.appendChild(text);
 
-        const answerLine = document.createElement("div");
-        answerLine.className = "answer-line";
-        body.appendChild(answerLine);
+        if (isStoryQuestion && !isArithmeticQuestion) {
+          const answerLine = document.createElement("div");
+          answerLine.className = "answer-line";
+          body.appendChild(answerLine);
+        }
 
         row.appendChild(no);
         row.appendChild(body);
@@ -1488,9 +1499,9 @@ Identity rules:
         employee.textContent = card && card.employeeId ? card.employeeId : "";
 
         const answers = document.createElement("td");
-        answers.textContent = (card && Array.isArray(card.items) ? card.items : [])
+        answers.textContent = (card && card.items ? card.items : [])
           .map(function(item, index) {
-            return (item.no || index + 1) + ". " + String(item.answer == null ? "" : item.answer);
+            return (item.no || index + 1) + ". " + (item.answer || "");
           })
           .join(", ");
 
@@ -1507,7 +1518,7 @@ Identity rules:
     }
 
     function nextPackPage() {
-      if (!currentPack || !Array.isArray(currentPack.cards)) {
+      if (!currentPack || !currentPack.cards) {
         return;
       }
 
@@ -1520,7 +1531,7 @@ Identity rules:
     }
 
     function previousPackPage() {
-      if (!currentPack || !Array.isArray(currentPack.cards)) {
+      if (!currentPack || !currentPack.cards) {
         return;
       }
 
@@ -1531,7 +1542,7 @@ Identity rules:
     }
 
     function toggleAnswerKey() {
-      if (!currentPack || !Array.isArray(currentPack.cards) || !currentPack.cards.length) {
+      if (!currentPack || !currentPack.cards || !currentPack.cards.length) {
         showOutput({
           message: "Generate an assessment first, then show the answer key."
         });
@@ -1671,7 +1682,7 @@ Identity rules:
     }
 
     function normalizeResultsData(data) {
-      data = unwrapBackendResponse(data) || {};
+      data = data || {};
 
       if (data.detail && data.summary) {
         return data;
