@@ -384,26 +384,26 @@
 
     .assessment-card-title {
       font-weight: 700;
-      font-size: 14px;
+      font-size: 16px;
       text-align: center;
-      margin-bottom: 7px;
+      margin-bottom: 9px;
       text-transform: uppercase;
-      line-height: 1.2;
+      line-height: 1.22;
     }
 
     .assessment-card-header {
       display: grid;
-      gap: 5px;
-      margin-bottom: 9px;
-      font-size: 9.5px;
-      line-height: 1.25;
+      gap: 7px;
+      margin-bottom: 18px;
+      font-size: 11px;
+      line-height: 1.32;
     }
 
     .header-row {
       display: grid;
-      grid-template-columns: 58px 8px 1fr;
+      grid-template-columns: 74px 8px 1fr;
       align-items: center;
-      column-gap: 3px;
+      column-gap: 4px;
     }
 
     .header-label {
@@ -422,50 +422,50 @@
 
     .question-list {
       display: grid;
-      gap: 4px;
-      font-size: 9.3px;
-      line-height: 1.24;
+      gap: 5px;
+      font-size: 10.8px;
+      line-height: 1.32;
     }
 
     .question-row {
       display: grid;
-      grid-template-columns: 16px 1fr;
-      gap: 5px;
+      grid-template-columns: 18px 1fr;
+      gap: 6px;
       align-items: start;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .question-number {
       font-weight: 700;
-      font-size: 9.3px;
-      line-height: 1.24;
+      font-size: 10.8px;
+      line-height: 1.32;
     }
 
     .question-body {
       display: grid;
-      gap: 3px;
+      gap: 4px;
       min-width: 0;
     }
 
     .question-text {
-      font-size: 9.3px;
-      line-height: 1.24;
+      font-size: 10.8px;
+      line-height: 1.32;
       overflow-wrap: anywhere;
     }
 
     .arithmetic-question-row {
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .story-question-row {
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .answer-line {
       border-bottom: 1px solid #111827;
-      height: 9px;
+      height: 12px;
       width: 100%;
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
     .answer-key {
@@ -1426,7 +1426,7 @@ Identity rules:
       header.innerHTML =
         "<div class='header-row'><span class='header-label'>Tanggal</span><span class='header-sep'>:</span><span class='header-line'>________________________</span></div>" +
         "<div class='header-row'><span class='header-label'>Nama</span><span class='header-sep'>:</span><span class='header-line'>________________________</span></div>" +
-        "<div class='header-row'><span class='header-label'>ID Karyawan</span><span class='header-sep'>:</span><span class='header-value'>" + escapeHtml(card && card.employeeId ? card.employeeId : "") + "</span></div>";
+        "<div class='header-row'><span class='header-label'>ID Karyawan</span><span class='header-sep'>:</span><span class='header-line'>________________________</span></div>";
       wrapper.appendChild(header);
 
       const list = document.createElement("div");
