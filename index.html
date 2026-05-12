@@ -18,6 +18,34 @@
       --success: #16a34a;
       --code-bg: #111827;
       --code-text: #e5e7eb;
+      --input-bg: #ffffff;
+      --input-text: #111827;
+      --nav-bg: #ffffff;
+      --nav-active-bg: #eff6ff;
+      --nav-active-border: #bfdbfe;
+      --table-head: #f9fafb;
+      --shadow: rgba(15, 23, 42, 0.04);
+    }
+
+    body.dark-mode {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --border: #334155;
+      --danger: #f87171;
+      --success: #4ade80;
+      --code-bg: #020617;
+      --code-text: #e5e7eb;
+      --input-bg: #0b1220;
+      --input-text: #e5e7eb;
+      --nav-bg: #0b1220;
+      --nav-active-bg: #1e3a8a;
+      --nav-active-border: #3b82f6;
+      --table-head: #1f2937;
+      --shadow: rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -29,6 +57,11 @@
       font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
+      color-scheme: light;
+    }
+
+    body.dark-mode {
+      color-scheme: dark;
     }
 
     .app {
@@ -85,6 +118,24 @@
       margin: 4px 0 0;
     }
 
+    .theme-toggle {
+      width: 100%;
+      margin: 0 0 18px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+    }
+
     .nav {
       display: grid;
       gap: 10px;
@@ -104,9 +155,9 @@
 
     .nav button:hover,
     .nav button.active {
-      background: #eff6ff;
-      border-color: #bfdbfe;
-      color: #1d4ed8;
+      background: var(--nav-active-bg);
+      border-color: var(--nav-active-border);
+      color: var(--primary);
     }
 
     .main {
@@ -142,7 +193,7 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 24px var(--shadow);
     }
 
     .card h2 {
@@ -169,7 +220,7 @@
     label {
       font-size: 13px;
       font-weight: 600;
-      color: #374151;
+      color: var(--text);
     }
 
     input,
@@ -180,8 +231,8 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       font-size: 14px;
-      background: white;
-      color: var(--text);
+      background: var(--input-bg);
+      color: var(--input-text);
     }
 
     textarea {
@@ -217,8 +268,8 @@
     }
 
     button.secondary {
-      background: #f3f4f6;
-      color: #111827;
+      background: var(--input-bg);
+      color: var(--text);
       border: 1px solid var(--border);
     }
 
@@ -285,7 +336,7 @@
     }
 
     th {
-      background: #f9fafb;
+      background: var(--table-head);
       font-weight: 700;
     }
 
@@ -295,11 +346,11 @@
 
     .pack-viewer {
       margin-top: 20px;
-      background: #ffffff;
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 24px var(--shadow);
     }
 
     .pack-toolbar {
@@ -477,7 +528,7 @@
       width: 100%;
       max-width: 794px;
       margin: 16px auto 0;
-      background: #ffffff;
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px;
@@ -497,15 +548,101 @@
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
+        padding: 14px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .brand {
+        margin-bottom: 12px;
+      }
+
+      .brand-logo-img,
+      .brand-logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .brand-title {
+        font-size: 16px;
+      }
+
+      .brand-subtitle {
+        font-size: 11px;
+      }
+
+      .theme-toggle {
+        margin-bottom: 12px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .nav button {
+        width: auto;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 10px 12px;
       }
 
       .main {
-        padding: 18px;
+        padding: 14px;
+      }
+
+      .header {
+        margin-bottom: 14px;
+      }
+
+      .header h1 {
+        font-size: 24px;
       }
 
       .grid,
       .form-grid {
         grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 14px;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      button.primary,
+      button.secondary,
+      button.danger {
+        width: 100%;
+      }
+
+      .pack-viewer {
+        padding: 10px;
+        margin-top: 14px;
+      }
+
+      .pack-toolbar {
+        align-items: stretch;
+      }
+
+      .pack-toolbar-left,
+      .pack-toolbar-right {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .page-indicator {
+        grid-column: 1 / -1;
+        text-align: center;
       }
 
       .card-page {
@@ -530,9 +667,48 @@
       .assessment-card {
         height: auto;
         min-height: 0;
-        border-bottom: 1px dashed #d1d5db;
+        border-bottom: 1px dashed var(--border);
         padding: 16px 10px;
         overflow: visible;
+      }
+
+      .assessment-card-title {
+        font-size: 17px;
+      }
+
+      .assessment-card-header {
+        font-size: 13px;
+      }
+
+      .header-row {
+        grid-template-columns: 94px 10px 1fr;
+      }
+
+      .question-text,
+      .question-number,
+      .question-list {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main {
+        padding: 10px;
+      }
+
+      .sidebar {
+        padding: 12px;
+      }
+
+      input,
+      select,
+      textarea {
+        font-size: 16px;
+      }
+
+      .pack-toolbar-left,
+      .pack-toolbar-right {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -633,6 +809,8 @@
           <p class="brand-subtitle">Arithmetic, Story, PDF Grading</p>
         </div>
       </div>
+
+      <button id="themeToggleBtn" class="theme-toggle" type="button" onclick="toggleDarkMode()">Dark Mode</button>
 
       <div class="nav">
         <button class="active" onclick="showSection('arithmetic', this)">Arithmetic Generator</button>
@@ -853,6 +1031,36 @@ Identity rules:
     const CARDS_PER_PAGE = 4;
     const DAILY_GRADE_SHEET_NAME = "Nilai_Harian";
     const SUMMARY_SHEET_NAME = "Summary";
+
+    initializeTheme();
+
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem("learningToolsTheme") || "";
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const shouldUseDark = savedTheme ? savedTheme === "dark" : prefersDark;
+
+      document.body.classList.toggle("dark-mode", shouldUseDark);
+      updateThemeToggleLabel();
+    }
+
+    function toggleDarkMode() {
+      const useDark = !document.body.classList.contains("dark-mode");
+      document.body.classList.toggle("dark-mode", useDark);
+      localStorage.setItem("learningToolsTheme", useDark ? "dark" : "light");
+      updateThemeToggleLabel();
+    }
+
+    function updateThemeToggleLabel() {
+      const btn = document.getElementById("themeToggleBtn");
+
+      if (!btn) {
+        return;
+      }
+
+      btn.textContent = document.body.classList.contains("dark-mode")
+        ? "Light Mode"
+        : "Dark Mode";
+    }
 
     async function callBackend(action, payload) {
       const normalizedPayload = payload || {};
