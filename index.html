@@ -635,8 +635,7 @@
       </div>
 
       <div class="nav">
-        <button class="active" onclick="showSection('dashboard', this)">Dashboard</button>
-        <button onclick="showSection('arithmetic', this)">Arithmetic Generator</button>
+        <button class="active" onclick="showSection('arithmetic', this)">Arithmetic Generator</button>
         <button onclick="showSection('story', this)">Story Generator</button>
         <button onclick="showSection('pdf', this)">PDF Grading</button>
         <button onclick="showSection('results', this)">Results</button>
@@ -649,34 +648,7 @@
         <p>Generate printable assessment cards with pagination, answer key, PDF grading, and results view.</p>
       </section>
 
-      <section id="dashboard" class="page-section">
-        <div class="grid">
-          <div class="card">
-            <h2>Backend Check</h2>
-            <p class="status">This tests the Vercel API proxy to Apps Script.</p>
-
-            <div class="button-row">
-              <button id="backendCheckBtn" class="primary" onclick="runBackendCheck()">Check Backend Config</button>
-              <button id="pingBtn" class="secondary" onclick="runPing()">Ping Backend</button>
-            </div>
-
-            <p id="dashboardStatus" class="status"></p>
-          </div>
-
-          <div class="card">
-            <h2>Quick Test</h2>
-            <p class="status">Use these after backend check passes.</p>
-
-            <div class="button-row">
-              <button class="primary" onclick="runArithmeticTest()">Arithmetic Test</button>
-              <button class="primary" onclick="runStoryTest()">Story Test</button>
-              <button class="secondary" onclick="loadResults()">Load Results</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="arithmetic" class="page-section hidden">
+      <section id="arithmetic" class="page-section">
         <div class="card">
           <h2>Arithmetic Generator</h2>
 
@@ -951,6 +923,30 @@ Identity rules:
       if (button) {
         button.classList.add("active");
       }
+
+      hideOutputSummaryForMainGenerators(id);
+    }
+
+    function getActiveSectionId() {
+      const active = document.querySelector(".page-section:not(.hidden)");
+      return active && active.id ? active.id : "";
+    }
+
+    function shouldHideOutputSummary() {
+      const id = getActiveSectionId();
+      return id === "arithmetic" || id === "story" || id === "pdf";
+    }
+
+    function hideOutputSummaryForMainGenerators(id) {
+      const outputCard = document.querySelector(".output-card");
+      const sectionId = id || getActiveSectionId();
+
+      if (
+        outputCard &&
+        (sectionId === "arithmetic" || sectionId === "story" || sectionId === "pdf")
+      ) {
+        outputCard.classList.add("hidden");
+      }
     }
 
     function setStatus(id, message, type) {
@@ -976,6 +972,13 @@ Identity rules:
       const output = document.getElementById("output");
       const outputCard = document.querySelector(".output-card");
 
+      if (shouldHideOutputSummary()) {
+        if (outputCard) {
+          outputCard.classList.add("hidden");
+        }
+        return;
+      }
+
       if (outputCard) {
         outputCard.classList.remove("hidden");
       }
@@ -997,6 +1000,13 @@ Identity rules:
       const message = "Error: " + (err && err.message ? err.message : String(err));
       const output = document.getElementById("output");
       const outputCard = document.querySelector(".output-card");
+
+      if (shouldHideOutputSummary()) {
+        if (outputCard) {
+          outputCard.classList.add("hidden");
+        }
+        return message;
+      }
 
       if (outputCard) {
         outputCard.classList.remove("hidden");
