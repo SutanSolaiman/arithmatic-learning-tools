@@ -146,7 +146,7 @@
       text-align: left;
       padding: 12px 14px;
       border: 1px solid var(--border);
-      background: white;
+      background: var(--nav-bg);
       border-radius: 10px;
       cursor: pointer;
       font-size: 14px;
@@ -158,6 +158,38 @@
       background: var(--nav-active-bg);
       border-color: var(--nav-active-border);
       color: var(--primary);
+    }
+
+    body.dark-mode .sidebar {
+      background: #111827;
+      border-color: #374151;
+    }
+
+    body.dark-mode .brand-title {
+      color: #f9fafb;
+    }
+
+    body.dark-mode .brand-subtitle {
+      color: #d1d5db;
+    }
+
+    body.dark-mode .nav button {
+      background: #1f2937;
+      color: #f9fafb;
+      border-color: #374151;
+    }
+
+    body.dark-mode .nav button:hover,
+    body.dark-mode .nav button.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #60a5fa;
+    }
+
+    body.dark-mode .theme-toggle {
+      background: #1f2937;
+      color: #f9fafb;
+      border-color: #374151;
     }
 
     .main {
@@ -810,7 +842,9 @@
         </div>
       </div>
 
-           <div class="nav">
+      <button id="themeToggleBtn" class="theme-toggle" type="button" onclick="toggleDarkMode()">Dark Mode</button>
+
+      <div class="nav">
         <button class="active" onclick="showSection('arithmetic', this)">Arithmetic Generator</button>
         <button onclick="showSection('story', this)">Story Generator</button>
         <button onclick="showSection('pdf', this)">PDF Grading</button>
@@ -2261,5 +2295,4 @@ Identity rules:
   </script>
 </body>
 </html>
-
 
